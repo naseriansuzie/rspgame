@@ -1,7 +1,8 @@
 import React from "react";
 import { observer, inject } from "mobx-react";
 import { Redirect } from "react-router-dom";
-import RunGame from "../components/RunGame";
+import GameGuide from "../components/GameGuide";
+import GameBoard from "../components/GameBoard";
 import TotalScore from "../components/TotalScore";
 import "./game.css";
 
@@ -15,7 +16,7 @@ class Game extends React.Component {
       <Redirect push to="/" />
     ) : (
       <div className="game-container">
-        <div>반갑습니다 {playerName}님!</div>
+        <p className="greeting">반갑습니다 {playerName}님!</p>
         <div className="btn-container">
           <button className="game-btns" onClick={askRestart}>
             재시작
@@ -24,7 +25,8 @@ class Game extends React.Component {
             그만하기
           </button>
         </div>
-        <RunGame />
+        <GameGuide />
+        <GameBoard />
         <TotalScore />
       </div>
     );

@@ -1,0 +1,59 @@
+.timer-container {
+  margin-bottom: 2%;
+}
+.seconds {
+  margin-top: 20px;
+  color: #ff306e;
+  font-size: 20px;
+}
+.hand-container {
+  display: flex;
+  flex: 1;
+  width: 95%;
+}
+.hands-box {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+  margin: 1% 5%;
+  border: 1px solid #ff306e;
+}
+.start-btn {
+  margin-top: 2%;
+  padding: 5% 3%;
+  background-color: #ff306e;
+  color: #ffffff;
+  font-size: 20px;
+  border-radius: 5%;
+}
+.description {
+  text-align: center;
+  font-size: 20px;
+}
+.rsp-container {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+.rsp {
+  margin-right: 10px;
+  font-size: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10%;
+}
+.score-result {
+  display: flex;
+  padding: 1% 2%;
+  width: 90%;
+  justify-content: center;
+  background-color: #ff306e;
+  color: #ffffff;
+  font-size: 20px;
+}
+
+button:focus {
+  outline: none;
+}
