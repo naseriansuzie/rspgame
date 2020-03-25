@@ -3,12 +3,12 @@ import ReactDOM from "react-dom";
 import { Provider } from "mobx-react";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-import GameStore from "./stores/gameStore";
+import RootStore from "./stores";
 
-const game = new GameStore();
+const root = new RootStore();
 
 ReactDOM.render(
-  <Provider game={game}>
+  <Provider {...root}>
     <BrowserRouter>
       <App />
     </BrowserRouter>

@@ -1,74 +1,83 @@
-import { observable, action, runInAction } from "mobx";
+import { observable, action } from "mobx";
 
 export default class GameStore {
-  @observable playerName = "tnwl";
+  constructor(root) {
+    this.root = root;
+  }
 
-  @observable gameSet = 1;
-
-  @observable currentGameSet = 1;
-
-  @observable computerHand = null;
+  @observable round = 1;
 
   @observable result = null;
 
+  @observable roundResults = [];
+  // [{win : 0 , lose : 3, draw: 0}, ...]
+
+  @observable computerHand = null;
+
   @observable win = 0;
-  @observable loose = 0;
+  @observable lose = 0;
   @observable draw = 0;
 
-  @observable results = null;
-  // [{win : 0 , loose : 3, draw: 0}, ...]
-
-  @observable quit = false;
-
-  @observable restart = false;
-
-  @action setPlayerName = e => {
-    this.playerName = e.target.value;
-  };
-  @action increaseSet = () => {
-    this.gameSet = this.gameSet + 2;
+  @action noticeFinal = () => {
+    // 게임 종료를 알리고, 최종 승자를 가른다.
   };
 
-  @action decreaseSet = () => {
-    if (this.gameSet - 2 < 0) {
-      alert("1 세트 이상으로 설정해주세요.");
+  @action prepareNextRound = () => {
+    if (this.root.setup.currentSet < this.root.setup.gameSet) {
+      this.root.setup.currentSet++;
+      this.round = 1;
     } else {
-      this.gameSet = this.gameSet - 2;
+      this.noticeFinal();
     }
   };
 
-  @action moveToGame = () => {
-    this.quit = false;
-    this.restart = false;
+  @action resetRSPPair = () => {
+    this.win = 0;
+    this.lose = 0;
+    this.draw = 0;
   };
 
-  @action makeRestart = () => {
-    this.restart = true;
-    this.results = [];
+  @action recordRoundResults = () => {
+    this.roundResults = [
+      ...this.roundResults,
+      {
+        win: this.win,
+        lose: this.lose,
+        draw: this.draw,
+      },
+    ];
   };
 
-  @action askRestart = () => {
-    if (window.confirm(`1세트부터 재시작합니다. 재시작하시겠습니까?`)) {
-      this.makeRestart();
-    } else console.log("취소");
+  @action moveToNextSet = () => {
+    this.recordRoundResults();
+    this.resetRSPPair();
+    this.prepareNextRound();
   };
 
-  @action makeQuit = () => {
-    this.gameSet = 1;
-    this.quit = true;
+  @action checkRound = () => {
+    if (this.round < 3) {
+      if (this.win >= 2) {
+        console.log("이번 세트 승리");
+        this.moveToNextSet();
+      } else if (this.lose >= 2) {
+        console.log("이번 세트 패배");
+        this.moveToNextSet();
+      } else {
+        this.round++;
+      }
+    } else if (this.round === 3) {
+      if (this.win >= 2 || (this.win >= 1 && this.draw === 2)) {
+        console.log("이번 세트 승리");
+        this.moveToNextSet();
+      } else if (this.lose >= 2 || (this.lose >= 1 && this.win === 0)) {
+        console.log("이번 세트 패배");
+        this.moveToNextSet();
+      } else {
+        console.log("이번 세트 비김");
+        this.moveToNextSet();
+      }
+    }
   };
-
-  @action askQuit = () => {
-    if (
-      window.confirm(
-        `게임을 종료하고 초기 페이지로 이동합니다. 게임을 그만하시겠습니까?`,
-      )
-    ) {
-      this.makeQuit();
-    } else console.log("취소");
-  };
-
-  @action checkRound = () => {};
 
   @action runGame = (myHand, computerHand) => {
     if (myHand - computerHand === 0) {
@@ -79,8 +88,9 @@ export default class GameStore {
       this.win++;
     } else if (myHand - computerHand === 1 || myHand - computerHand === -2) {
       this.result = "졌습니다 :(";
-      this.loose++;
+      this.lose++;
     }
+    this.checkRound();
   };
 
   @action setComputerHand = myHand => {
@@ -88,6 +98,6 @@ export default class GameStore {
     const hands = ["가위", "바위", "보"];
     const idx = Math.floor(Math.random() * 3);
     this.computerHand = hands[idx];
-    runInAction(() => this.runGame(myHand, rsp[this.computerHand]));
+    this.runGame(myHand, rsp[this.computerHand]);
   };
 }
