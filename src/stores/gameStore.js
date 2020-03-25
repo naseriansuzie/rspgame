@@ -1,9 +1,15 @@
-import { observable, action } from "mobx";
+import { observable, action, runInAction } from "mobx";
 
 export default class GameStore {
+  @observable playerName = "tnwl";
+
   @observable gameSet = 1;
 
   @observable currentGameSet = 1;
+
+  @observable computerHand = null;
+
+  @observable result = null;
 
   @observable win = 0;
   @observable loose = 0;
@@ -16,6 +22,9 @@ export default class GameStore {
 
   @observable restart = false;
 
+  @action setPlayerName = e => {
+    this.playerName = e.target.value;
+  };
   @action increaseSet = () => {
     this.gameSet = this.gameSet + 2;
   };
@@ -59,15 +68,26 @@ export default class GameStore {
     } else console.log("취소");
   };
 
-  rsp = { scissors: 1, rock: 0, paper: -1 };
+  @action checkRound = () => {};
 
   @action runGame = (myHand, computerHand) => {
     if (myHand - computerHand === 0) {
+      this.result = "비겼습니다";
       this.draw++;
     } else if (myHand - computerHand === -1 || myHand - computerHand === 2) {
+      this.result = "이겼습니다 :)";
       this.win++;
     } else if (myHand - computerHand === 1 || myHand - computerHand === -2) {
+      this.result = "졌습니다 :(";
       this.loose++;
     }
+  };
+
+  @action setComputerHand = myHand => {
+    const rsp = { 가위: 1, 바위: 0, 보: -1 };
+    const hands = ["가위", "바위", "보"];
+    const idx = Math.floor(Math.random() * 3);
+    this.computerHand = hands[idx];
+    runInAction(() => this.runGame(myHand, rsp[this.computerHand]));
   };
 }
