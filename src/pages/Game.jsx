@@ -5,11 +5,11 @@ import RunGame from "../components/RunGame";
 import TotalScore from "../components/TotalScore";
 import "./game.css";
 
-@inject("game")
+@inject("setup")
 @observer
 class Game extends React.Component {
   render() {
-    const { playerName, quit, askQuit, askRestart } = this.props.game;
+    const { playerName, quit, askRestart, askQuit } = this.props.setup;
 
     return quit || playerName === "" ? (
       <Redirect push to="/" />
