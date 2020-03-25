@@ -28,17 +28,17 @@ class GameBoard extends Component {
 
     return (
       <>
-        <div style={{ marginTop: "2%" }}>
-          <h2>NOW</h2>
-          <ul>
-            <li>전체 게임 세트 : {gameSet}</li>
-            <li>
+        <div className="marginTop">
+          <h2 className="h2">NOW</h2>
+          <ul className="ul">
+            <li className="guide">전체 게임 세트 : {gameSet}</li>
+            <li className="guide">
               {currentSet}세트 {round} 번째 판입니다.
             </li>
           </ul>
         </div>
         <div className="hand-container">
-          <div style={{ display: "flex", flex: 1 }}>
+          <div className="two-hands">
             <div className="hands-box">
               {isTimerOn === false ? (
                 <button className="start-btn" onClick={setTimer}>
@@ -96,7 +96,7 @@ class GameBoard extends Component {
                 <div>이번 판 결과 "{result}"</div>
                 <div>
                   {
-                    <ul>
+                    <ul className="ul">
                       {currentSet} 세트 = 승 : {win} | 무 : {draw} | 패 : {lose}
                     </ul>
                   }

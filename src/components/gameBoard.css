@@ -1,8 +1,15 @@
+.guide {
+  font-size: 18px;
+}
 .hand-container {
   display: flex;
   flex-direction: column;
   flex: 1;
   width: 100%;
+}
+.two-hands {
+  display: flex;
+  flex: 1;
 }
 .hands-box {
   display: flex;
@@ -58,4 +65,7 @@
 }
 button:focus {
   outline: none;
+}
+.marginTop {
+  margin-top: 2%;
 }

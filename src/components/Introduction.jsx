@@ -18,13 +18,14 @@ class Introduction extends Component {
     return (
       <div className="intro-container">
         <div className="intro-box">
-          <h2>
+          <h2 className="h2">
             <span role="img" aria-label="Raising Hands">
               🙌
             </span>{" "}
             반갑습니다 플레이어님, 이름을 적어주세요!
           </h2>
           <input
+            className="input"
             type="text"
             placeholder="플레이어 이름은?"
             value={playerName}
@@ -32,7 +33,7 @@ class Introduction extends Component {
           ></input>
         </div>
         <div className="intro-box">
-          <h2>
+          <h2 className="h2">
             <span role="img" aria-label="Right-Facing Fist">
               🤜
             </span>{" "}
@@ -49,7 +50,7 @@ class Introduction extends Component {
           </div>
         </div>
         <div className="intro-box">
-          <h2>
+          <h2 className="h2">
             <span role="img" aria-label="OK Hand">
               👌
             </span>{" "}
