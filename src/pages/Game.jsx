@@ -6,11 +6,12 @@ import GameBoard from "../components/GameBoard";
 import TotalScore from "../components/TotalScore";
 import "./game.css";
 
-@inject("setup")
+@inject("setup", "game")
 @observer
 class Game extends React.Component {
   render() {
     const { playerName, quit, askRestart, askQuit } = this.props.setup;
+    const { isFinished } = this.props.game;
 
     return quit || playerName === "" ? (
       <Redirect push to="/" />
@@ -22,7 +23,7 @@ class Game extends React.Component {
             재시작
           </button>
           <button className="game-btns" onClick={askQuit}>
-            그만하기
+            {isFinished ? `돌아가기` : `그만하기`}
           </button>
         </div>
         <GameGuide />
