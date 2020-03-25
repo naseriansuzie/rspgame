@@ -20,9 +20,39 @@ export default class GameStore {
   @observable roundResults = [];
   // [{win : 0 , lose : 3, draw: 0}, ...]
 
+  @observable winningStatus = { player: 0, computer: 0, draw: 0 };
+
+  @observable isFinished = false;
+
+  @observable finalWinner = null;
+
+  @action findFinalWinner = () => {
+    let players = Object.keys(this.winningStatus);
+    let winnings = Object.values(this.winningStatus);
+    let maxWinning = Math.max(...winnings);
+    console.log("max =", maxWinning);
+    let idx = winnings.indexOf(maxWinning);
+    if (players[idx] === "draw") {
+      players = players.filter(player => players !== "draw");
+      winnings = winnings.filter(number => number !== maxWinning);
+      maxWinning = winnings.indexOf(...winnings);
+    }
+    let count = 0;
+    winnings.forEach(number => {
+      if (number === maxWinning) {
+        count++;
+      }
+    });
+    if (count > 2) {
+      this.findFinalWinner = "draw";
+    } else {
+      this.finalWinner = players[idx];
+    }
+  };
+
   @action noticeFinal = () => {
-    // 게임 종료를 알리고, 최종 승자를 가른다.
-    console.log("모든 set 종료");
+    this.isFinished = true;
+    this.findFinalWinner();
   };
 
   @action prepareNextRound = () => {
@@ -40,10 +70,21 @@ export default class GameStore {
     this.draw = 0;
   };
 
-  @action recordRoundResults = () => {
+  @action recordWinner = winner => {
+    this.winningStatus[winner]++;
+    console.log("--------------");
+    console.log("player", this.winningStatus.player);
+    console.log("computer", this.winningStatus.computer);
+    console.log("draw", this.winningStatus.draw);
+  };
+
+  @action recordRoundResults = winner => {
     this.roundResults = [
       ...this.roundResults,
       {
+        key: this.root.setup.currentSet,
+        set: this.root.setup.currentSet,
+        winner: winner,
         win: this.win,
         lose: this.lose,
         draw: this.draw,
@@ -51,8 +92,9 @@ export default class GameStore {
     ];
   };
 
-  @action moveToNextSet = () => {
-    this.recordRoundResults();
+  @action moveToNextSet = winner => {
+    this.recordRoundResults(winner);
+    this.recordWinner(winner);
     this.resetRSPPair();
     this.prepareNextRound();
   };
@@ -64,24 +106,19 @@ export default class GameStore {
   @action checkRound = () => {
     if (this.round < 3) {
       if (this.win >= 2) {
-        console.log("이번 세트 승리");
-        this.moveToNextSet();
+        this.moveToNextSet("player");
       } else if (this.lose >= 2) {
-        console.log("이번 세트 패배");
-        this.moveToNextSet();
+        this.moveToNextSet("computer");
       } else {
         this.round++;
       }
     } else if (this.round === 3) {
       if (this.win >= 2 || (this.win >= 1 && this.draw === 2)) {
-        console.log("이번 세트 승리");
-        this.moveToNextSet();
+        this.moveToNextSet("player");
       } else if (this.lose >= 2 || (this.lose >= 1 && this.win === 0)) {
-        console.log("이번 세트 패배");
-        this.moveToNextSet();
+        this.moveToNextSet("computer");
       } else {
-        console.log("이번 세트 비김");
-        this.moveToNextSet();
+        this.moveToNextSet("draw");
       }
     }
     this.resetHandChoice();
