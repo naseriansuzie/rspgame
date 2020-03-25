@@ -7,28 +7,38 @@ import "./gameBoard.css";
 @observer
 class GameBoard extends Component {
   render() {
-    const { setComputerHand, computerHand, result, autoLose } = this.props.game;
-    const { playerName, isTimerOn, setTimer } = this.props.setup;
+    const {
+      setComputerHand,
+      computerHand,
+      result,
+      round,
+      win,
+      lose,
+      draw,
+      autoLose,
+      isFinished,
+    } = this.props.game;
+    const {
+      playerName,
+      gameSet,
+      currentSet,
+      isTimerOn,
+      setTimer,
+    } = this.props.setup;
 
     return (
       <>
-        <div className="timer-container">
-          {isTimerOn ? (
-            <Timer
-              initialTime={5500}
-              direction="backward"
-              checkpoints={[{ time: 0, callback: autoLose }]}
-            >
-              <div className="seconds">
-                남은 시간 <Timer.Seconds />초
-              </div>
-            </Timer>
-          ) : (
-            <div />
-          )}
+        <div style={{ marginTop: "2%" }}>
+          <h2>NOW</h2>
+          <ul>
+            <li>전체 게임 세트 : {gameSet}</li>
+            <li>
+              {currentSet}세트 {round} 번째 판입니다.
+            </li>
+          </ul>
         </div>
-        <div>
-          <div className="hand-container">
+        <div className="hand-container">
+          <div style={{ display: "flex", flex: 1 }}>
             <div className="hands-box">
               {isTimerOn === false ? (
                 <button className="start-btn" onClick={setTimer}>
@@ -57,6 +67,21 @@ class GameBoard extends Component {
                       보
                     </button>
                   </div>
+                  <div className="timer-container">
+                    {isTimerOn ? (
+                      <Timer
+                        initialTime={5500}
+                        direction="backward"
+                        checkpoints={[{ time: 0, callback: autoLose }]}
+                      >
+                        <div className="seconds">
+                          남은 시간 <Timer.Seconds />초
+                        </div>
+                      </Timer>
+                    ) : (
+                      <div />
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -65,11 +90,22 @@ class GameBoard extends Component {
               <p className="description">{computerHand}</p>
             </div>
           </div>
-          {result ? (
-            <div className="score-result">이번 판 결과 "{result}"</div>
-          ) : (
-            <div />
-          )}
+          <div>
+            {result && !isFinished ? (
+              <div className="score-result">
+                <div>이번 판 결과 "{result}"</div>
+                <div>
+                  {
+                    <ul>
+                      {currentSet} 세트 = 승 : {win} | 무 : {draw} | 패 : {lose}
+                    </ul>
+                  }
+                </div>
+              </div>
+            ) : (
+              <div />
+            )}
+          </div>
         </div>
       </>
     );
