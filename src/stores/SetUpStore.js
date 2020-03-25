@@ -5,7 +5,7 @@ export default class SetUpStore {
     this.root = root;
   }
 
-  @observable playerName = "";
+  @observable playerName = "aaa";
 
   @observable gameSet = 1;
 
@@ -14,6 +14,8 @@ export default class SetUpStore {
   @observable quit = false;
 
   @observable restart = false;
+
+  @observable isTimerOn = false;
 
   @action setPlayerName = e => {
     this.playerName = e.target.value;
@@ -37,6 +39,7 @@ export default class SetUpStore {
 
   @action resetGame = () => {
     this.currentSet = 1;
+    this.isTimerOn = false;
     this.root.game.round = 1;
     this.root.game.computerHand = null;
     this.root.game.result = null;
@@ -69,5 +72,13 @@ export default class SetUpStore {
     ) {
       this.makeQuit();
     }
+  };
+
+  @action setTimer = () => {
+    this.isTimerOn = true;
+  };
+
+  @action resetTimer = () => {
+    this.isTimerOn = false;
   };
 }

@@ -7,10 +7,7 @@ export default class GameStore {
 
   @observable round = 1;
 
-  @observable result = null;
-
-  @observable roundResults = [];
-  // [{win : 0 , lose : 3, draw: 0}, ...]
+  @observable choseHand = false;
 
   @observable computerHand = null;
 
@@ -18,8 +15,14 @@ export default class GameStore {
   @observable lose = 0;
   @observable draw = 0;
 
+  @observable result = null;
+
+  @observable roundResults = [];
+  // [{win : 0 , lose : 3, draw: 0}, ...]
+
   @action noticeFinal = () => {
     // 게임 종료를 알리고, 최종 승자를 가른다.
+    console.log("모든 set 종료");
   };
 
   @action prepareNextRound = () => {
@@ -54,6 +57,10 @@ export default class GameStore {
     this.prepareNextRound();
   };
 
+  @action resetHandChoice = () => {
+    this.choseHand = false;
+  };
+
   @action checkRound = () => {
     if (this.round < 3) {
       if (this.win >= 2) {
@@ -77,27 +84,46 @@ export default class GameStore {
         this.moveToNextSet();
       }
     }
+    this.resetHandChoice();
+    this.root.setup.resetTimer();
+  };
+
+  @action makeHandChoice = () => {
+    this.choseHand = true;
   };
 
   @action runGame = (myHand, computerHand) => {
     if (myHand - computerHand === 0) {
-      this.result = "비겼습니다";
+      this.result = "무";
       this.draw++;
     } else if (myHand - computerHand === -1 || myHand - computerHand === 2) {
-      this.result = "이겼습니다 :)";
+      this.result = "승";
       this.win++;
     } else if (myHand - computerHand === 1 || myHand - computerHand === -2) {
-      this.result = "졌습니다 :(";
+      this.result = "패";
       this.lose++;
     }
+    this.makeHandChoice();
     this.checkRound();
   };
 
   @action setComputerHand = myHand => {
-    const rsp = { 가위: 1, 바위: 0, 보: -1 };
-    const hands = ["가위", "바위", "보"];
-    const idx = Math.floor(Math.random() * 3);
-    this.computerHand = hands[idx];
-    this.runGame(myHand, rsp[this.computerHand]);
+    if (this.root.setup.isTimerOn) {
+      const rsp = { 가위: 1, 바위: 0, 보: -1 };
+      const hands = ["가위", "바위", "보"];
+      const idx = Math.floor(Math.random() * 3);
+      this.computerHand = hands[idx];
+      this.runGame(myHand, rsp[this.computerHand]);
+    } else alert("게임 시작 버튼을 눌러주세요!");
+  };
+
+  @action autoLose = () => {
+    if (this.choseHand === false) {
+      alert("5초가 지났습니다 ㅠㅠ");
+      this.result = "패";
+      this.computerHand = "자동 승리";
+      this.lose++;
+      this.checkRound();
+    }
   };
 }
