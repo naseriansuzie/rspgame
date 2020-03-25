@@ -1,0 +1,57 @@
+.intro-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5%;
+}
+.intro-box {
+  padding: 2% 3%;
+}
+h2 {
+  color: #ff306e;
+}
+input {
+  display: flex;
+  width: 50%;
+  font-size: 20px;
+}
+.game-set {
+  display: flex;
+  align-items: center;
+}
+.num-of-set {
+  font-size: 25px;
+  margin-right: 3%;
+}
+.plusMinus-btn {
+  margin-right: 1%;
+  padding: 0.5% 1%;
+  background-color: #ff306e;
+  color: #ffffff;
+  font-size: 20px;
+  border-radius: 20%;
+}
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  padding-left: 1em;
+  text-indent: -0.7em;
+  font-size: 18px;
+}
+
+li::before {
+  content: "• ";
+  color: #ff306e; /* or whatever color you prefer */
+}
+
+.move-btn {
+  margin: 1%;
+  padding: 0.5% 1%;
+  background-color: #dee2e6;
+  color: #ff306e;
+  font-size: 20px;
+  border-radius: 5%;
+}
