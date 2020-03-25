@@ -6,7 +6,7 @@ import "./App.css";
 const App = () => {
   return (
     <>
-      <div className="App">
+      <div className="title">
         <h1>가위바위보 게임</h1>
       </div>
       <Switch>
