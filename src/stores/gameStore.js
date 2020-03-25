@@ -30,7 +30,6 @@ export default class GameStore {
     let players = Object.keys(this.winningStatus);
     let winnings = Object.values(this.winningStatus);
     let maxWinning = Math.max(...winnings);
-    console.log("max =", maxWinning);
     let idx = winnings.indexOf(maxWinning);
     if (players[idx] === "draw") {
       players = players.filter(player => players !== "draw");
@@ -72,10 +71,6 @@ export default class GameStore {
 
   @action recordWinner = winner => {
     this.winningStatus[winner]++;
-    console.log("--------------");
-    console.log("player", this.winningStatus.player);
-    console.log("computer", this.winningStatus.computer);
-    console.log("draw", this.winningStatus.draw);
   };
 
   @action recordRoundResults = winner => {
