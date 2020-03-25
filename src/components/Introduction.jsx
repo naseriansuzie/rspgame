@@ -2,18 +2,29 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { observer, inject } from "mobx-react";
 
-@inject(stores => ({
-  gameSet: stores.game.gameSet,
-  increaseSet: stores.game.increaseSet,
-  decreaseSet: stores.game.decreaseSet,
-  moveToGame: stores.game.moveToGame,
-}))
+@inject("game")
 @observer
 class Introduction extends Component {
   render() {
-    const { gameSet, increaseSet, decreaseSet, moveToGame } = this.props;
+    const {
+      playerName,
+      setPlayerName,
+      gameSet,
+      increaseSet,
+      decreaseSet,
+      moveToGame,
+    } = this.props.game;
     return (
       <>
+        <div>
+          <h2>반갑습니다 플레이어님!</h2>
+          <p>플레이어 이름을 적어주세요!</p>
+          <input
+            type="text"
+            value={playerName}
+            onChange={setPlayerName}
+          ></input>
+        </div>
         <div>
           <h2>게임 설정하기</h2>
           <ul>
@@ -26,10 +37,15 @@ class Introduction extends Component {
             <button onClick={decreaseSet}>-</button>
           </div>
         </div>
-
-        <Link className="start" to="/rsp" onClick={moveToGame}>
-          <button>게임 시작하기</button>
-        </Link>
+        {playerName !== "" ? (
+          <Link className="start" to="/rsp" onClick={moveToGame}>
+            <button>게임 시작하기</button>
+          </Link>
+        ) : (
+          <button onClick={() => alert("player의 이름을 넣어주세요!")}>
+            게임시작하기
+          </button>
+        )}
       </>
     );
   }
