@@ -1,31 +1,45 @@
-// import React from "react";
-
-// const Game = () => {
-//   return <div>game</div>;
-// };
-
-// export default Game;
-
-import React, { Component } from "react";
+import React from "react";
 import { observer, inject } from "mobx-react";
+import { Redirect } from "react-router-dom";
+import RunGame from "../components/RunGame";
+import TotalScore from "../components/TotalScore";
 
-@inject(stores => ({
-  number: stores.game.number,
-  increase: stores.game.increase,
-  decrease: stores.game.decrease,
+@inject(store => ({
+  gameSet: store.game.gameSet,
+  currentGameSet: store.game.currentGameSet,
+  results: store.game.results,
+  quit: store.game.quit,
+  askRestart: store.game.askRestart,
+  askQuit: store.game.askQuit,
+  rsp: store.game.rsp,
 }))
 @observer
-class Game extends Component {
+class Game extends React.Component {
+  componentDidMount() {
+    console.log("did mount 후 몇 set? ", this.props.gameSet);
+  }
+
   render() {
-    const { number, increase, decrease } = this.props;
-    return (
-      <div>
-        <h1>{number}</h1>
-        <button onClick={increase}>+1</button>
-        <button onClick={decrease}>-1</button>
-      </div>
+    console.log("몇 set? ", this.props.gameSet);
+    console.log("결과는?", this.props.results);
+
+    const { quit, askQuit, askRestart } = this.props;
+    return quit ? (
+      <Redirect push to="/" />
+    ) : (
+      <>
+        <div>
+          <button className="game-btns" onClick={askRestart}>
+            재시작
+          </button>
+          <button className="game-btns" onClick={askQuit}>
+            그만하기
+          </button>
+        </div>
+        <RunGame />
+        <TotalScore />
+      </>
     );
   }
 }
-
 export default Game;
