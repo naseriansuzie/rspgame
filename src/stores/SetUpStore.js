@@ -22,14 +22,14 @@ export default class SetUpStore {
   };
 
   @action increaseSet = () => {
-    this.gameSet = this.gameSet + 2;
+    this.gameSet++;
   };
 
   @action decreaseSet = () => {
     if (this.gameSet - 2 < 0) {
       alert("1 세트 이상으로 설정해주세요.");
     } else {
-      this.gameSet = this.gameSet - 2;
+      this.gameSet--;
     }
   };
   @action moveToGame = () => {
@@ -40,11 +40,15 @@ export default class SetUpStore {
   @action resetGame = () => {
     this.currentSet = 1;
     this.isTimerOn = false;
+    this.root.game.isFinished = false;
     this.root.game.round = 1;
     this.root.game.computerHand = null;
     this.root.game.result = null;
     this.root.game.roundResults = [];
+    this.root.game.winningStatus = { player: 0, computer: 0, draw: 0 };
+    this.root.game.finalWinner = null;
   };
+
   @action makeRestart = () => {
     this.restart = true;
     this.resetGame();
@@ -75,7 +79,9 @@ export default class SetUpStore {
   };
 
   @action setTimer = () => {
-    this.isTimerOn = true;
+    if (this.root.game.isFinished) {
+      alert("게임이 종료되었습니다!");
+    } else this.isTimerOn = true;
   };
 
   @action resetTimer = () => {
