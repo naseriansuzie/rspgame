@@ -3,32 +3,20 @@ import { observer, inject } from "mobx-react";
 import { Redirect } from "react-router-dom";
 import RunGame from "../components/RunGame";
 import TotalScore from "../components/TotalScore";
+import "./game.css";
 
-@inject(store => ({
-  gameSet: store.game.gameSet,
-  currentGameSet: store.game.currentGameSet,
-  results: store.game.results,
-  quit: store.game.quit,
-  askRestart: store.game.askRestart,
-  askQuit: store.game.askQuit,
-  rsp: store.game.rsp,
-}))
+@inject("game")
 @observer
 class Game extends React.Component {
-  componentDidMount() {
-    console.log("did mount 후 몇 set? ", this.props.gameSet);
-  }
-
   render() {
-    console.log("몇 set? ", this.props.gameSet);
-    console.log("결과는?", this.props.results);
+    const { playerName, quit, askQuit, askRestart } = this.props.game;
 
-    const { quit, askQuit, askRestart } = this.props;
-    return quit ? (
+    return quit || playerName === "" ? (
       <Redirect push to="/" />
     ) : (
-      <>
-        <div>
+      <div className="game-container">
+        <div>반갑습니다 {playerName}님!</div>
+        <div className="btn-container">
           <button className="game-btns" onClick={askRestart}>
             재시작
           </button>
@@ -38,7 +26,7 @@ class Game extends React.Component {
         </div>
         <RunGame />
         <TotalScore />
-      </>
+      </div>
     );
   }
 }

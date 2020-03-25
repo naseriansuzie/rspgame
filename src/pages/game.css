@@ -1,0 +1,16 @@
+.game-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+}
+.btn-container {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 5%;
+}
+.game-btns {
+  font-size: 20px;
+  border-radius: 5;
+  margin: 0 2%;
+}
