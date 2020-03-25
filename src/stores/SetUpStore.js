@@ -5,7 +5,7 @@ export default class SetUpStore {
     this.root = root;
   }
 
-  @observable playerName = "aaa";
+  @observable playerName = "";
 
   @observable gameSet = 1;
 
@@ -16,6 +16,41 @@ export default class SetUpStore {
   @observable restart = false;
 
   @observable isTimerOn = false;
+
+  columns = [
+    {
+      title: "Set",
+      dataIndex: "set",
+      key: "set",
+    },
+    {
+      title: "Winner",
+      dataIndex: "winner",
+      key: "winner",
+      render: text => {
+        if (text === "player") {
+          return this.playerName;
+        } else if (text === "computer") {
+          return "컴퓨터";
+        } else return "무승부";
+      },
+    },
+    {
+      title: "승",
+      dataIndex: "win",
+      key: "win",
+    },
+    {
+      title: "무",
+      dataIndex: "draw",
+      key: "draw",
+    },
+    {
+      title: "패",
+      dataIndex: "lose",
+      key: "lose",
+    },
+  ];
 
   @action setPlayerName = e => {
     this.playerName = e.target.value;
