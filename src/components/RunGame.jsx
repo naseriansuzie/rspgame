@@ -1,21 +1,34 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
+import Timer from "react-compound-timer";
 import "./rungame.css";
 
-@inject("game")
+@inject("game", "setup")
 @observer
 class RunGame extends Component {
   render() {
-    const {
-      currentGameSet,
-      setComputerHand,
-      computerHand,
-      result,
-    } = this.props.game;
+    const { setComputerHand, computerHand, round, result } = this.props.game;
+    const { gameSet, currentSet } = this.props.setup;
+    console.log(round, result);
     return (
       <div className="game-board">
         <div>
-          <p>{currentGameSet}세트</p>
+          <Timer
+            initialTime={10000}
+            direction="backward"
+            checkpoints={[{ time: 0, callback: () => console.log("end") }]}
+          >
+            <Timer.Seconds />초
+          </Timer>
+        </div>
+        <div>
+          <ul>
+            <li>
+              NOW : {currentSet}세트 {round} 번째 판
+            </li>
+            <li>Total Set : {gameSet}</li>
+          </ul>
+          <p></p>
         </div>
         <div className="hand-container">
           <div className="hands">
