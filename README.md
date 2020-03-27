@@ -1,4 +1,4 @@
-## Rock scissors paper game
+## Rock Scissors Paper Game
 
 ---
 
@@ -9,10 +9,10 @@
 ---
 
 - In src, there are 1)Pages, 2)Components, 3)Stores and 4)App.js & index.js
-- index.js is the root file and it connects App.js
-- App.js takes page routings to pages
-- Pages contains Components
-- Stores serves global store and it has two different store(SetUpStore and GameStore)
+- index.js is the root file and it connects to App.js
+- App.js takes page routings to each page
+- Pages contain Components
+- Stores serve a global store and it is divided into two different stores(SetUpStore and GameStore)
 
 ### Quick Start
 
@@ -30,4 +30,4 @@ $ npm(yarn) install
 $ npm(yarn) start
 ```
 
-- note that this was ejected for mobx decorator use
+- Please note that this project was ejected from CRA for mobx decorator use
