@@ -56,7 +56,7 @@ class Introduction extends Component {
             </span>{" "}
             게임 규칙을 읽어주세요.
           </h2>
-          <ul>
+          <ul className="ul">
             <li>1 세트는 총 3판의 게임으로 진행됩니다.</li>
             <li>3판 중 [승]이 많은 플레이어가 그 세트에서 승리합니다.</li>
             <li>절반 이상의 세트를 이긴 플레이어가 최종 승리합니다.</li>
