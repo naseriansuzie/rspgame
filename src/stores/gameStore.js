@@ -31,10 +31,12 @@ export default class GameStore {
     let winnings = Object.values(this.winningStatus);
     let maxWinning = Math.max(...winnings);
     let idx = winnings.indexOf(maxWinning);
+
     if (players[idx] === "draw") {
-      players = players.filter(player => players !== "draw");
+      players = players.filter(player => player !== "draw");
       winnings = winnings.filter(number => number !== maxWinning);
-      maxWinning = winnings.indexOf(...winnings);
+      maxWinning = Math.max(...winnings);
+      idx = winnings.indexOf(maxWinning);
     }
     let count = 0;
     winnings.forEach(number => {
@@ -42,11 +44,10 @@ export default class GameStore {
         count++;
       }
     });
+
     if (count > 2) {
-      this.findFinalWinner = "draw";
-    } else {
-      this.finalWinner = players[idx];
-    }
+      this.finalWinner = "draw";
+    } else this.finalWinner = players[idx];
   };
 
   @action noticeFinal = () => {
