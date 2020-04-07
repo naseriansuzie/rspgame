@@ -39,8 +39,8 @@ export default class GameStore {
       idx = winnings.indexOf(maxWinning);
     }
     let count = 0;
-    winnings.forEach(number => {
-      if (number === maxWinning) {
+    winnings.forEach((number, idx) => {
+      if (number === maxWinning && players[idx] !== "draw") {
         count++;
       }
     });
