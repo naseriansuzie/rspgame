@@ -45,7 +45,7 @@ export default class GameStore {
       }
     });
 
-    if (count > 2) {
+    if (count >= 2) {
       this.finalWinner = "draw";
     } else this.finalWinner = players[idx];
   };
@@ -141,22 +141,17 @@ export default class GameStore {
   };
 
   @action setComputerHand = myHand => {
-    if (this.root.setup.isTimerOn) {
       const rsp = { 가위: 1, 바위: 0, 보: -1 };
       const hands = ["가위", "바위", "보"];
       const idx = Math.floor(Math.random() * 3);
       this.computerHand = hands[idx];
       this.runGame(myHand, rsp[this.computerHand]);
-    } else alert("게임 시작 버튼을 눌러주세요!");
   };
 
   @action autoLose = () => {
-    if (this.choseHand === false) {
-      alert("5초가 지났습니다 ㅠㅠ");
       this.result = "패";
       this.computerHand = "자동 승리";
       this.lose++;
       this.checkRound();
-    }
   };
 }
