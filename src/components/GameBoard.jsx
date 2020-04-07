@@ -95,11 +95,9 @@ class GameBoard extends Component {
               <div className="score-result">
                 <div>이번 판 결과 "{result}"</div>
                 <div>
-                  {
                     <ul className="ul">
                       {currentSet} 세트 = 승 : {win} | 무 : {draw} | 패 : {lose}
                     </ul>
-                  }
                 </div>
               </div>
             ) : (
