@@ -137,19 +137,9 @@ class GameBoard extends Component {
   }
 }
 
-GameBoard.propTypes = {
-  isFinished : PropTypes.bool,
-  isTimerOn : PropTypes.bool,
-  choseHand : PropTypes.bool,
-  gameSet : PropTypes.number,
-  currentSet : PropTypes.number,
-  round : PropTypes.number,
-  playerName : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  computerHand : PropTypes.string,
-  result : PropTypes.string,
-  win: PropTypes.number,
-  draw: PropTypes.number,
-  lose: PropTypes.number,
-};
+GameBoard.wrappedComponent.propTypes = {
+  game : PropTypes.object.isRequired, 
+  setup : PropTypes.object.isRequired
+}
 
 export default GameBoard;

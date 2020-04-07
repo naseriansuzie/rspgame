@@ -57,10 +57,9 @@ class Game extends React.Component {
   }
 }
 
-Game.propTypes = {
-  playerName : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  quit : PropTypes.bool,
-  isFinished: PropTypes.bool
-};
+Game.wrappedComponent.propTypes = {
+  game : PropTypes.object.isRequired, 
+  setup : PropTypes.object.isRequired
+}
 
 export default Game;

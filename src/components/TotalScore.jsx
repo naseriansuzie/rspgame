@@ -86,10 +86,9 @@ class TotalScore extends Component {
   }
 }
 
-TotalScore.propTypes = {
-  playerName : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  roundResults: PropTypes.arrayOf(PropTypes.object),
-  isFinished : PropTypes.bool,
-  finalWinner : PropTypes.string,
+TotalScore.wrappedComponent.propTypes = {
+  game : PropTypes.object.isRequired, 
+  setup : PropTypes.object.isRequired
 }
+
 export default TotalScore;

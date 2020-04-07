@@ -95,11 +95,8 @@ class Introduction extends Component {
   }
 }
 
-Introduction.propTypes = {
-  playerName : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  gameSet : PropTypes.number,
-  fillPlayerName : PropTypes.func,
-  moveToGame : PropTypes.func
-};
+Introduction.wrappedComponent.propTypes = {
+  setup : PropTypes.object.isRequired
+}
 
 export default Introduction;
