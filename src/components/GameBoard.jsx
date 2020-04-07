@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
+import PropTypes from "prop-types";
 import Timer from "react-compound-timer";
 import "./gameBoard.css";
 
@@ -135,4 +136,20 @@ class GameBoard extends Component {
     );
   }
 }
+
+GameBoard.propTypes = {
+  isFinished : PropTypes.bool,
+  isTimerOn : PropTypes.bool,
+  choseHand : PropTypes.bool,
+  gameSet : PropTypes.number,
+  currentSet : PropTypes.number,
+  round : PropTypes.number,
+  playerName : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  computerHand : PropTypes.string,
+  result : PropTypes.string,
+  win: PropTypes.number,
+  draw: PropTypes.number,
+  lose: PropTypes.number,
+};
+
 export default GameBoard;

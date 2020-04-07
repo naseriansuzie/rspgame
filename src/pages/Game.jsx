@@ -1,6 +1,7 @@
 import React from "react";
 import { observer, inject } from "mobx-react";
 import { Redirect } from "react-router-dom";
+import PropTypes from 'prop-types';
 import GameGuide from "../components/GameGuide";
 import GameBoard from "../components/GameBoard";
 import TotalScore from "../components/TotalScore";
@@ -55,4 +56,11 @@ class Game extends React.Component {
     );
   }
 }
+
+Game.propTypes = {
+  playerName : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  quit : PropTypes.bool,
+  isFinished: PropTypes.bool
+};
+
 export default Game;

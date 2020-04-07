@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 import { observer, inject } from "mobx-react";
 import "./introduction.css";
 
@@ -93,4 +94,12 @@ class Introduction extends Component {
     );
   }
 }
+
+Introduction.propTypes = {
+  playerName : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  gameSet : PropTypes.number,
+  setPlayerName : PropTypes.func,
+  moveToGame : PropTypes.func
+};
+
 export default Introduction;

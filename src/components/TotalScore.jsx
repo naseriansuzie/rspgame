@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
+import PropTypes from "prop-types";
 import "antd/dist/antd.css";
 import { Table } from "antd";
 import "./totalScore.css";
@@ -83,5 +84,12 @@ class TotalScore extends Component {
       </div>
     );
   }
+}
+
+TotalScore.propTypes = {
+  playerName : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  roundResults: PropTypes.arrayOf(PropTypes.object),
+  isFinished : PropTypes.bool,
+  finalWinner : PropTypes.string,
 }
 export default TotalScore;
