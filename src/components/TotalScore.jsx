@@ -7,9 +7,51 @@ import "./totalScore.css";
 @inject("game", "setup")
 @observer
 class TotalScore extends Component {
+  constructor(props) {
+    super();
+    this.translateWinner = this.translateWinner.bind(this);
+  }
+
+  columns = [
+    {
+      title: "Set",
+      dataIndex: "set",
+      key: "set",
+    },
+    {
+      title: "Winner",
+      dataIndex: "winner",
+      key: "winner",
+      render: text => this.translateWinner(text)
+    },
+    {
+      title: "승",
+      dataIndex: "win",
+      key: "win",
+    },
+    {
+      title: "무",
+      dataIndex: "draw",
+      key: "draw",
+    },
+    {
+      title: "패",
+      dataIndex: "lose",
+      key: "lose",
+    },
+  ];
+
+  translateWinner(text) {
+    if (text === "player") {
+      return this.props.setup.playerName;
+    } else if (text === "computer") {
+      return "컴퓨터";
+    } else return "무승부";
+  }
+
   render() {
     const { roundResults, isFinished, finalWinner } = this.props.game;
-    const { playerName, columns } = this.props.setup;
+    const { playerName } = this.props.setup;
     return (
       <div className="total-score-container">
         <h2 className="h2">
@@ -21,7 +63,7 @@ class TotalScore extends Component {
 
         <ul className="score-table ul">
           {roundResults && roundResults.length > 0 ? (
-            <Table columns={columns} dataSource={roundResults} />
+            <Table columns={this.columns} dataSource={roundResults} />
           ) : (
             <span />
           )}

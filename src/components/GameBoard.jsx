@@ -6,16 +6,43 @@ import "./gameBoard.css";
 @inject("game", "setup")
 @observer
 class GameBoard extends Component {
+  constructor(props) {
+    super();
+    this.timerClickHandler = this.timerClickHandler.bind(this);
+    this.rspClickHandler = this.rspClickHandler.bind(this);
+    this.noticeTimeOut = this.noticeTimeOut.bind(this);
+  }
+  
+  timerClickHandler () {
+    const {game, setup} = this.props;
+    if (game.isFinished) {
+      alert("게임이 종료되었습니다!");
+    } else setup.setTimer();
+  }
+
+  rspClickHandler (hand) {
+    const {game, setup} = this.props;
+    if(setup.isTimerOn) {
+      game.setComputerHand(hand);
+    } else alert("게임 시작 버튼을 눌러주세요!");
+  }
+
+  noticeTimeOut () {
+    const { choseHand, autoLose} = this.props.game;
+    if(choseHand === false) {
+      alert("5초가 지났습니다 ㅠㅠ");
+      autoLose();
+    }
+  }
+  
   render() {
     const {
-      setComputerHand,
       computerHand,
       result,
       round,
       win,
       lose,
       draw,
-      autoLose,
       isFinished,
     } = this.props.game;
     const {
@@ -23,7 +50,6 @@ class GameBoard extends Component {
       gameSet,
       currentSet,
       isTimerOn,
-      setTimer,
     } = this.props.setup;
 
     return (
@@ -41,26 +67,26 @@ class GameBoard extends Component {
           <div className="two-hands">
             <div className="hands-box">
               {isTimerOn === false ? (
-                <button className="start-btn" onClick={setTimer}>
+                <button className="start-btn" onClick={this.timerClickHandler}>
                   게임 시작
                 </button>
               ) : (
                 <div>
                   <p className="description">{playerName}의 선택</p>
                   <div className="rsp-container">
-                    <button className="rsp" onClick={() => setComputerHand(1)}>
+                    <button className="rsp" onClick={this.rspClickHandler.bind(null, 1)}>
                       <span role="img" aria-label="Victory Hands">
                         ✌️
                       </span>{" "}
                       가위
                     </button>
-                    <button className="rsp" onClick={() => setComputerHand(0)}>
+                    <button className="rsp" onClick={this.rspClickHandler.bind(null, 0)}>
                       <span role="img" aria-label="Raised Fist">
                         ✊
                       </span>{" "}
                       바위
                     </button>
-                    <button className="rsp" onClick={() => setComputerHand(-1)}>
+                    <button className="rsp" onClick={this.rspClickHandler.bind(null, -1)}>
                       <span role="img" aria-label="Raised Back of Hand">
                         🤚
                       </span>{" "}
@@ -72,7 +98,7 @@ class GameBoard extends Component {
                       <Timer
                         initialTime={5500}
                         direction="backward"
-                        checkpoints={[{ time: 0, callback: autoLose }]}
+                        checkpoints={[{ time: 0, callback: this.noticeTimeOut }]}
                       >
                         <div className="seconds">
                           남은 시간 <Timer.Seconds />초
