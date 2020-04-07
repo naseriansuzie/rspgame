@@ -28,7 +28,7 @@ class Introduction extends Component {
     const {
       playerName,
       gameSet,
-      setPlayerName,
+      fillPlayerName,
       moveToGame,
     } = this.props.setup;
     return (
@@ -45,7 +45,7 @@ class Introduction extends Component {
             type="text"
             placeholder="플레이어 이름은?"
             value={playerName}
-            onChange={setPlayerName}
+            onChange={fillPlayerName}
           ></input>
         </div>
         <div className="intro-box">
@@ -98,7 +98,7 @@ class Introduction extends Component {
 Introduction.propTypes = {
   playerName : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   gameSet : PropTypes.number,
-  setPlayerName : PropTypes.func,
+  fillPlayerName : PropTypes.func,
   moveToGame : PropTypes.func
 };
 

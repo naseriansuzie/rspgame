@@ -17,7 +17,7 @@ export default class SetUpStore {
 
   @observable isTimerOn = false;
 
-  @action setPlayerName = e => {
+  @action fillPlayerName = e => {
     this.playerName = e.target.value;
   };
 

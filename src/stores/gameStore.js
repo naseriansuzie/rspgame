@@ -140,7 +140,7 @@ export default class GameStore {
     this.checkRound();
   };
 
-  @action setComputerHand = myHand => {
+  @action pickComputerHand = myHand => {
       const rsp = { 가위: 1, 바위: 0, 보: -1 };
       const hands = ["가위", "바위", "보"];
       const idx = Math.floor(Math.random() * 3);

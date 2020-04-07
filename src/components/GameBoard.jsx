@@ -24,7 +24,7 @@ class GameBoard extends Component {
   rspClickHandler (hand) {
     const {game, setup} = this.props;
     if(setup.isTimerOn) {
-      game.setComputerHand(hand);
+      game.pickComputerHand(hand);
     } else alert("게임 시작 버튼을 눌러주세요!");
   }
 
