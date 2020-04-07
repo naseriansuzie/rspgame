@@ -126,31 +126,33 @@ export default class GameStore {
   };
 
   @action runGame = (myHand, computerHand) => {
-    if (myHand - computerHand === 0) {
-      this.result = "무";
-      this.draw++;
-    } else if (myHand - computerHand === -1 || myHand - computerHand === 2) {
-      this.result = "승";
-      this.win++;
-    } else if (myHand - computerHand === 1 || myHand - computerHand === -2) {
-      this.result = "패";
+    const calculation = myHand - computerHand;
+    if (calculation === 1 || calculation === -2) {
+      this.result = 1;
       this.lose++;
+    } else if (calculation === 0) {
+      this.result = 2;
+      this.draw++;
+    } else if (calculation === -1 || calculation === 2) {
+      this.result = 3;
+      this.win++;
     }
     this.makeHandChoice();
     this.checkRound();
   };
 
   @action pickComputerHand = myHand => {
-      const rsp = { 가위: 1, 바위: 0, 보: -1 };
-      const hands = ["가위", "바위", "보"];
-      const idx = Math.floor(Math.random() * 3);
-      this.computerHand = hands[idx];
-      this.runGame(myHand, rsp[this.computerHand]);
+    const rsp = {ROCK : 0, SCISSORS : 1, PAPER : -1};
+    const hands = Object.keys(rsp); // [ROCK, SCISSORS, PAPER]
+    const idx = Math.floor(Math.random() * 3);
+    this.computerHand = rsp[hands[idx]];
+    this.runGame(myHand, this.computerHand);
   };
 
+
   @action autoLose = () => {
-      this.result = "패";
-      this.computerHand = "자동 승리";
+      this.result = 1;
+      this.computerHand = 2;
       this.lose++;
       this.checkRound();
   };

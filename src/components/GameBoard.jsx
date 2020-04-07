@@ -12,6 +12,8 @@ class GameBoard extends Component {
     this.timerClickHandler = this.timerClickHandler.bind(this);
     this.rspClickHandler = this.rspClickHandler.bind(this);
     this.noticeTimeOut = this.noticeTimeOut.bind(this);
+    this.displayResult = this.displayResult.bind(this);
+    this.displayComputerHand = this.displayComputerHand.bind(this);
   }
   
   timerClickHandler () {
@@ -35,7 +37,29 @@ class GameBoard extends Component {
       autoLose();
     }
   }
-  
+
+  displayResult (result) {
+    if(result === 1) {
+      return "패";
+    } else if(result === 2) {
+      return "무";
+    } else if(result === 3) {
+      return "승"
+    }
+  }
+
+  displayComputerHand (computerHand) {
+    if(computerHand === 1) {
+      return "가위";
+    } else if(computerHand === 0) {
+      return "바위";
+    } else if(computerHand === -1) {
+      return "보";
+    } else if(computerHand === 2) {
+      return "자동 승리";
+    }
+  }
+
   render() {
     const {
       computerHand,
@@ -114,13 +138,13 @@ class GameBoard extends Component {
             </div>
             <div className="hands-box">
               <p className="description">컴퓨터의 선택</p>
-              <p className="description">{computerHand}</p>
+              <p className="description">{this.displayComputerHand(computerHand)}</p>
             </div>
           </div>
           <div>
             {result && !isFinished ? (
               <div className="score-result">
-                <div>이번 판 결과 "{result}"</div>
+                <div>이번 판 결과 "{this.displayResult(result)}"</div>
                 <div>
                     <ul className="ul">
                       {currentSet} 세트 = 승 : {win} | 무 : {draw} | 패 : {lose}
