@@ -71,7 +71,7 @@ export default class GameStore {
   };
 
   @action recordWinner = winner => {
-    this.winningStatus[winner]++;
+    this.winningStatus[winner]++; 
   };
 
   @action recordRoundResults = winner => {
@@ -87,8 +87,8 @@ export default class GameStore {
       },
     ];
   };
-
-  @action moveToNextSet = winner => {
+  
+  moveToNextSet = winner => {
     this.recordRoundResults(winner);
     this.recordWinner(winner);
     this.resetRSPPair();
