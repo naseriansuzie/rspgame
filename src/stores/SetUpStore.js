@@ -38,17 +38,16 @@ export default class SetUpStore {
     this.currentSet = 1;
     this.isTimerOn = false;
     this.root.game.isFinished = false;
-    this.root.game.round = 1;
-    this.root.game.computerHand = null;
-    this.root.game.result = null;
-    this.root.game.roundResults = [];
     this.root.game.finalWinner = null;
+    this.root.game.sets = [];
+    this.root.game.rounds = null;
+    this.root.game.currentRound = 1;
+    this.root.game.computerHand = null;
   };
 
   @action makeRestart = () => {
     this.restart = true;
     this.resetGame();
-    this.root.game.resetRSPPair();
   };
 
 
