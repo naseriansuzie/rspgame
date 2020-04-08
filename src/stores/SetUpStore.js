@@ -42,7 +42,6 @@ export default class SetUpStore {
     this.root.game.computerHand = null;
     this.root.game.result = null;
     this.root.game.roundResults = [];
-    this.root.game.winningStatus = { player: 0, computer: 0, draw: 0 };
     this.root.game.finalWinner = null;
   };
 
