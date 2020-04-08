@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import "antd/dist/antd.css";
 import { Table } from "antd";
 import "./totalScore.css";
+import { PLAYER } from "../constant";
 
 @inject("game", "setup")
 @observer
@@ -18,38 +19,18 @@ class TotalScore extends Component {
     {
       title: "Winner",
       dataIndex: "winner",
-      key: "winner",
-      render: playerNum => this.translateWinner(playerNum)
-    },
-    {
-      title: "승",
-      dataIndex: "win",
-      key: "win",
-    },
-    {
-      title: "무",
-      dataIndex: "draw",
-      key: "draw",
-    },
-    {
-      title: "패",
-      dataIndex: "lose",
-      key: "lose",
-    },
+      key: "winner"
+    }
   ];
 
-  translateWinner = (playerNum) => {
-    if (playerNum === 0) {
-      return "무승부"
-    } else if (playerNum === 1) {
-      return "컴퓨터";
-    } else if(playerNum === 2) {
+  translateWinner = (finalWinner) => {
+    if (finalWinner === PLAYER) {
       return this.props.setup.playerName;
-    }
+    } else return finalWinner;
   }
 
   render() {
-    const { roundResults, isFinished, finalWinner } = this.props.game;
+    const { sets, isFinished, finalWinner } = this.props.game;
     return (
       <div className="total-score-container">
         <h2 className="h2">
@@ -60,8 +41,8 @@ class TotalScore extends Component {
         </h2>
 
         <ul className="score-table ul">
-          {roundResults && roundResults.length > 0 ? (
-            <Table columns={this.columns} dataSource={roundResults} />
+          {sets && sets.length > 0 ? (
+            <Table columns={this.columns} dataSource={sets} />
           ) : (
             <span />
           )}
