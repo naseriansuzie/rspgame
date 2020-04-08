@@ -7,30 +7,22 @@ import "./gameBoard.css";
 @inject("game", "setup")
 @observer
 class GameBoard extends Component {
-  constructor(props) {
-    super();
-    this.timerClickHandler = this.timerClickHandler.bind(this);
-    this.rspClickHandler = this.rspClickHandler.bind(this);
-    this.noticeTimeOut = this.noticeTimeOut.bind(this);
-    this.displayResult = this.displayResult.bind(this);
-    this.displayComputerHand = this.displayComputerHand.bind(this);
-  }
   
-  timerClickHandler () {
+  clickTimerHandler = () => {
     const {game, setup} = this.props;
     if (game.isFinished) {
       alert("게임이 종료되었습니다!");
     } else setup.setTimer();
   }
 
-  rspClickHandler (hand) {
+  clickRSPHandler = (hand) => {
     const {game, setup} = this.props;
     if(setup.isTimerOn) {
       game.pickComputerHand(hand);
     } else alert("게임 시작 버튼을 눌러주세요!");
   }
 
-  noticeTimeOut () {
+  noticeTimeOut = () => {
     const { choseHand, autoLose} = this.props.game;
     if(choseHand === false) {
       alert("5초가 지났습니다 ㅠㅠ");
@@ -38,7 +30,7 @@ class GameBoard extends Component {
     }
   }
 
-  displayResult (result) {
+  displayResult = (result) => {
     if(result === 1) {
       return "패";
     } else if(result === 2) {
@@ -48,7 +40,7 @@ class GameBoard extends Component {
     }
   }
 
-  displayComputerHand (computerHand) {
+  displayComputerHand = (computerHand) => {
     if(computerHand === 1) {
       return "가위";
     } else if(computerHand === 0) {
@@ -92,26 +84,26 @@ class GameBoard extends Component {
           <div className="two-hands">
             <div className="hands-box">
               {isTimerOn === false ? (
-                <button className="start-btn" onClick={this.timerClickHandler}>
+                <button className="start-btn" onClick={this.clickTimerHandler}>
                   게임 시작
                 </button>
               ) : (
                 <div>
                   <p className="description">{playerName}의 선택</p>
                   <div className="rsp-container">
-                    <button className="rsp" onClick={this.rspClickHandler.bind(null, 1)}>
+                    <button className="rsp" onClick={() => this.clickRSPHandler(1)}>
                       <span role="img" aria-label="Victory Hands">
                         ✌️
                       </span>{" "}
                       가위
                     </button>
-                    <button className="rsp" onClick={this.rspClickHandler.bind(null, 0)}>
+                    <button className="rsp" onClick={() => this.clickRSPHandler(0)}>
                       <span role="img" aria-label="Raised Fist">
                         ✊
                       </span>{" "}
                       바위
                     </button>
-                    <button className="rsp" onClick={this.rspClickHandler.bind(null, -1)}>
+                    <button className="rsp" onClick={() => this.clickRSPHandler(-1)}>
                       <span role="img" aria-label="Raised Back of Hand">
                         🤚
                       </span>{" "}

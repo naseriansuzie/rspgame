@@ -7,21 +7,20 @@ import "./introduction.css";
 @inject("setup")
 @observer
 class Introduction extends Component { 
-  constructor(props) {
-    super();
-    this.plusClickHandler = this.plusClickHandler.bind(this);
-    this.minusClickHandler = this.minusClickHandler.bind(this);
-  }
 
-  plusClickHandler () {
+  clickPlusHandler = () => {
     this.props.setup.increaseSet();
   }
 
-  minusClickHandler () {
+  clickMinusHandler = () => {
     const {gameSet, decreaseSet} = this.props.setup;
     if(gameSet - 2 < 0) {
       alert("1세트 이상으로 설정해주세요.");
     } else decreaseSet();
+  }
+  
+  askNameInput = () => {
+    alert("플레이어 이름을 넣어주세요!");
   }
 
   render() {
@@ -57,10 +56,10 @@ class Introduction extends Component {
           </h2>
           <div className="game-set">
             <span className="num-of-set">{gameSet} set</span>
-            <button className="plusMinus-btn" onClick={this.plusClickHandler}>
+            <button className="plusMinus-btn" onClick={this.clickPlusHandler}>
               +
             </button>
-            <button className="plusMinus-btn" onClick={this.minusClickHandler}>
+            <button className="plusMinus-btn" onClick={this.clickMinusHandler}>
               -
             </button>
           </div>
@@ -84,7 +83,7 @@ class Introduction extends Component {
           ) : (
             <button
               className="move-btn"
-              onClick={() => alert("player의 이름을 넣어주세요!")}
+              onClick={this.askNameInput}
             >
               게임시작하기
             </button>

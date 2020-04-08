@@ -8,10 +8,6 @@ import "./totalScore.css";
 @inject("game", "setup")
 @observer
 class TotalScore extends Component {
-  constructor(props) {
-    super();
-    this.translateWinner = this.translateWinner.bind(this);
-  }
 
   columns = [
     {
@@ -42,7 +38,7 @@ class TotalScore extends Component {
     },
   ];
 
-  translateWinner(playerNum) {
+  translateWinner = (playerNum) => {
     if (playerNum === 0) {
       return "무승부"
     } else if (playerNum === 1) {
