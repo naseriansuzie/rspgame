@@ -23,7 +23,7 @@ class TotalScore extends Component {
       title: "Winner",
       dataIndex: "winner",
       key: "winner",
-      render: text => this.translateWinner(text)
+      render: playerNum => this.translateWinner(playerNum)
     },
     {
       title: "승",
@@ -42,17 +42,18 @@ class TotalScore extends Component {
     },
   ];
 
-  translateWinner(text) {
-    if (text === "player") {
-      return this.props.setup.playerName;
-    } else if (text === "computer") {
+  translateWinner(playerNum) {
+    if (playerNum === 0) {
+      return "무승부"
+    } else if (playerNum === 1) {
       return "컴퓨터";
-    } else return "무승부";
+    } else if(playerNum === 2) {
+      return this.props.setup.playerName;
+    }
   }
 
   render() {
     const { roundResults, isFinished, finalWinner } = this.props.game;
-    const { playerName } = this.props.setup;
     return (
       <div className="total-score-container">
         <h2 className="h2">
@@ -71,12 +72,7 @@ class TotalScore extends Component {
         </ul>
         {isFinished ? (
           <h1>
-            최종 승리자 :{" "}
-            {finalWinner === "player"
-              ? playerName
-              : finalWinner === "computer"
-              ? "컴퓨터"
-              : "무승부"}
+            최종 승리자 : {this.translateWinner(finalWinner)}
           </h1>
         ) : (
           <p />

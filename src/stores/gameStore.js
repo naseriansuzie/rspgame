@@ -20,34 +20,38 @@ export default class GameStore {
   @observable roundResults = [];
   // [{win : 0 , lose : 3, draw: 0}, ...]
 
-  @observable winningStatus = { player: 0, computer: 0, draw: 0 };
-
   @observable isFinished = false;
 
   @observable finalWinner = null;
 
   @action findFinalWinner = () => {
-    let players = Object.keys(this.winningStatus);
-    let winnings = Object.values(this.winningStatus);
+    const winStats = {};
+    this.roundResults.map(roundResult => roundResult.winner).forEach(player => {
+      if(winStats[player]) {
+        winStats[player]++;
+      } else winStats[player] = 1;
+    })
+    let players = Object.keys(winStats);
+    let winnings = Object.values(winStats);
     let maxWinning = Math.max(...winnings);
     let idx = winnings.indexOf(maxWinning);
 
-    if (players[idx] === "draw") {
-      players = players.filter(player => player !== "draw");
+    if (players[idx] === 0) {
+      players = players.filter(player => player !== 0);
       winnings = winnings.filter(number => number !== maxWinning);
       maxWinning = Math.max(...winnings);
       idx = winnings.indexOf(maxWinning);
     }
     let count = 0;
     winnings.forEach((number, idx) => {
-      if (number === maxWinning && players[idx] !== "draw") {
+      if (number === maxWinning && players[idx] !== 0) {
         count++;
       }
     });
 
     if (count >= 2) {
-      this.finalWinner = "draw";
-    } else this.finalWinner = players[idx];
+      this.finalWinner = 0; // no winner
+    } else this.finalWinner = Number(players[idx]);
   };
 
   @action noticeFinal = () => {
@@ -70,10 +74,6 @@ export default class GameStore {
     this.draw = 0;
   };
 
-  @action recordWinner = winner => {
-    this.winningStatus[winner]++; 
-  };
-
   @action recordRoundResults = winner => {
     this.roundResults = [
       ...this.roundResults,
@@ -90,7 +90,6 @@ export default class GameStore {
   
   moveToNextSet = winner => {
     this.recordRoundResults(winner);
-    this.recordWinner(winner);
     this.resetRSPPair();
     this.prepareNextRound();
   };
@@ -102,19 +101,19 @@ export default class GameStore {
   @action checkRound = () => {
     if (this.round < 3) {
       if (this.win >= 2) {
-        this.moveToNextSet("player");
+        this.moveToNextSet(2); // player wins
       } else if (this.lose >= 2) {
-        this.moveToNextSet("computer");
+        this.moveToNextSet(1); // computer wins
       } else {
         this.round++;
       }
     } else if (this.round === 3) {
       if (this.win >= 2 || (this.win >= 1 && this.draw === 2)) {
-        this.moveToNextSet("player");
+        this.moveToNextSet(2); // player wins
       } else if (this.lose >= 2 || (this.lose >= 1 && this.win === 0)) {
-        this.moveToNextSet("computer");
+        this.moveToNextSet(1); // computer wins
       } else {
-        this.moveToNextSet("draw");
+        this.moveToNextSet(0); // no winner
       }
     }
     this.resetHandChoice();
