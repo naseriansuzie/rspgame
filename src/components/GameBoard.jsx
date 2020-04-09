@@ -9,14 +9,14 @@ import { ROCK, SCISSORS, PAPER, RSP, PLAYER } from "../constant";
 @observer
 class GameBoard extends Component {
   
-  clickTimerHandler = () => {
+  handleTimerClick = () => {
     const {game, setup} = this.props;
     if (game.isFinished) {
       alert("게임이 종료되었습니다!");
     } else setup.setTimer();
   }
 
-  clickRSPHandler = (hand) => {
+  handleRSPClick = (hand) => {
     const {game, setup} = this.props;
     if(setup.isTimerOn) {
       game.pickComputerHand(hand);
@@ -67,26 +67,26 @@ class GameBoard extends Component {
           <div className="two-hands">
             <div className="hands-box">
               {isTimerOn === false ? (
-                <button className="start-btn" onClick={this.clickTimerHandler}>
+                <button className="start-btn" onClick={this.handleTimerClick}>
                   게임 시작
                 </button>
               ) : (
                 <div>
                   <p className="description">{playerName}의 선택</p>
                   <div className="rsp-container">
-                    <button className="rsp" onClick={() => this.clickRSPHandler(RSP[SCISSORS])}>
+                    <button className="rsp" onClick={() => this.handleRSPClick(RSP[SCISSORS])}>
                       <span role="img" aria-label="Victory Hands">
                         ✌️
                       </span>{" "}
                       {SCISSORS}
                     </button>
-                    <button className="rsp" onClick={() => this.clickRSPHandler(RSP[ROCK])}>
+                    <button className="rsp" onClick={() => this.handleRSPClick(RSP[ROCK])}>
                       <span role="img" aria-label="Raised Fist">
                         ✊
                       </span>{" "}
                       {ROCK}
                     </button>
-                    <button className="rsp" onClick={() => this.clickRSPHandler(RSP[PAPER])}>
+                    <button className="rsp" onClick={() => this.handleRSPClick(RSP[PAPER])}>
                       <span role="img" aria-label="Raised Back of Hand">
                         🤚
                       </span>{" "}

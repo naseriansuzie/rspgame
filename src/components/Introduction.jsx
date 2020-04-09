@@ -8,11 +8,11 @@ import "./introduction.css";
 @observer
 class Introduction extends Component { 
 
-  clickPlusHandler = () => {
+  handlePlusClick = () => {
     this.props.setup.increaseSet();
   }
 
-  clickMinusHandler = () => {
+  handleMinusClick = () => {
     const {gameSet, decreaseSet} = this.props.setup;
     if(gameSet - 2 < 0) {
       alert("1세트 이상으로 설정해주세요.");
@@ -56,10 +56,10 @@ class Introduction extends Component {
           </h2>
           <div className="game-set">
             <span className="num-of-set">{gameSet} set</span>
-            <button className="plusMinus-btn" onClick={this.clickPlusHandler}>
+            <button className="plusMinus-btn" onClick={this.handlePlusClick}>
               +
             </button>
-            <button className="plusMinus-btn" onClick={this.clickMinusHandler}>
+            <button className="plusMinus-btn" onClick={this.handleMinusClick}>
               -
             </button>
           </div>

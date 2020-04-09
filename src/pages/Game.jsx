@@ -12,17 +12,15 @@ import "./game.css";
 class Game extends React.Component {
   constructor(props) {
     super();
-    this.restartClickHandler = this.restartClickHandler.bind(this);
-    this.quitClickHandler = this.quitClickHandler.bind(this);
   }
 
-  restartClickHandler() {
+  handleRestartClick = () => {
     if(window.confirm(`1세트부터 재시작합니다. 재시작하시겠습니까?`)) {
       this.props.setup.makeRestart();
     }
   }
 
-  quitClickHandler() {
+  handleQuitClick = () => {
     if (
       window.confirm(
         `게임을 종료하고 초기 페이지로 이동합니다. 게임을 그만하시겠습니까?`,
@@ -42,10 +40,10 @@ class Game extends React.Component {
       <div className="game-container">
         <p className="greeting">반갑습니다 {playerName}님!</p>
         <div className="btn-container">
-          <button className="game-btns" onClick={this.restartClickHandler}>
+          <button className="game-btns" onClick={this.handleRestartClick}>
             재시작
           </button>
-          <button className="game-btns" onClick={this.quitClickHandler}>
+          <button className="game-btns" onClick={this.handleQuitClick}>
             {isFinished ? `돌아가기` : `그만하기`}
           </button>
         </div>
