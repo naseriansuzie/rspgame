@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import "antd/dist/antd.css";
 import { Table } from "antd";
 import "./totalScore.css";
-import { PLAYER } from "../constant";
+import { PLAYER, COMPUTER, DRAW } from "../constant";
 
 @inject("game", "setup")
 @observer
@@ -19,14 +19,22 @@ class TotalScore extends Component {
     {
       title: "Winner",
       dataIndex: "winner",
-      key: "winner"
+      key: "winner",
+      render : winner => this.renderWinner(winner)
     }
   ];
 
-  translateWinner = (finalWinner) => {
-    if (finalWinner === PLAYER) {
-      return this.props.setup.playerName;
-    } else return finalWinner;
+  renderWinner = (winner) => {
+    switch(winner) {
+      case PLAYER :
+        return this.props.setup.playerName;
+      case COMPUTER :
+        return "컴퓨터";
+      case DRAW :
+        return "무승부";
+      default :
+        return "";
+    }
   }
 
   render() {
@@ -49,7 +57,7 @@ class TotalScore extends Component {
         </ul>
         {isFinished ? (
           <h1>
-            최종 승리자 : {this.translateWinner(finalWinner)}
+            최종 승리자 : {this.renderWinner(finalWinner)}
           </h1>
         ) : (
           <p />
