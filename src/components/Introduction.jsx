@@ -8,28 +8,33 @@ import "./introduction.css";
 @observer
 class Introduction extends Component { 
 
+  handleChange = (e) => {
+    const { setup } = this.props;
+    setup.fillPlayerName(e);
+  }
+
   handlePlusClick = () => {
     this.props.setup.increaseSet();
   }
 
   handleMinusClick = () => {
-    const {gameSet, decreaseSet} = this.props.setup;
-    if(gameSet - 2 < 0) {
+    const { setup } = this.props;
+    if(setup.gameSet - 2 < 0) {
       alert("1세트 이상으로 설정해주세요.");
-    } else decreaseSet();
+    } else setup.decreaseSet();
+  }
+
+  handleStartClick = () => {
+    const { setup } = this.props;
+    setup.moveToGame();
   }
   
-  askNameInput = () => {
+  handleAlert = () => {
     alert("플레이어 이름을 넣어주세요!");
   }
 
   render() {
-    const {
-      playerName,
-      gameSet,
-      fillPlayerName,
-      moveToGame,
-    } = this.props.setup;
+    const { playerName, gameSet } = this.props.setup;
     return (
       <div className="intro-container">
         <div className="intro-box">
@@ -44,7 +49,7 @@ class Introduction extends Component {
             type="text"
             placeholder="플레이어 이름은?"
             value={playerName}
-            onChange={fillPlayerName}
+            onChange={this.handleChange}
           ></input>
         </div>
         <div className="intro-box">
@@ -77,15 +82,15 @@ class Introduction extends Component {
             <li>절반 이상의 세트를 이긴 플레이어가 최종 승리합니다.</li>
           </ul>
           {playerName !== "" ? (
-            <Link to="/rsp" onClick={moveToGame}>
-              <button className="move-btn">게임 시작하기</button>
+            <Link to="/rsp" onClick={this.handleStartClick}>
+              <button className="move-btn">시작하기</button>
             </Link>
           ) : (
             <button
               className="move-btn"
-              onClick={this.askNameInput}
+              onClick={this.handleAlert}
             >
-              게임시작하기
+              시작하기
             </button>
           )}
         </div>

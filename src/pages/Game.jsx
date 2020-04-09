@@ -10,10 +10,6 @@ import "./game.css";
 @inject("setup", "game")
 @observer
 class Game extends React.Component {
-  constructor(props) {
-    super();
-  }
-
   handleRestartClick = () => {
     if(window.confirm(`1세트부터 재시작합니다. 재시작하시겠습니까?`)) {
       this.props.setup.makeRestart();

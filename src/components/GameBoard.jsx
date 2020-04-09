@@ -10,18 +10,19 @@ import HandButton from "./HandButton";
 @observer
 class GameBoard extends Component {
   
-  handleTimerClick = () => {
+  handleGameStartClick = () => {
     const {game, setup} = this.props;
     if (game.isFinished) {
       alert("게임이 종료되었습니다!");
     } else setup.setTimer();
   }
   
-  noticeTimeOut = () => {
-    const { choseHand, autoLose} = this.props.game;
-    if(choseHand === false) {
+  
+  handleTimeout = () => {
+    const { game } = this.props;
+    if(game.choseHand === false) {
       alert("5초가 지났습니다 ㅠㅠ");
-      autoLose();
+      game.autoLose();
     }
   }
 
@@ -84,7 +85,7 @@ class GameBoard extends Component {
           <div className="two-hands">
             <div className="hands-box">
               {isTimerOn === false ? (
-                <button className="start-btn" onClick={this.handleTimerClick}>
+                <button className="start-btn" onClick={this.handleGameStartClick}>
                   게임 시작
                 </button>
               ) : (
@@ -100,7 +101,7 @@ class GameBoard extends Component {
                       <Timer
                         initialTime={5500}
                         direction="backward"
-                        checkpoints={[{ time: 0, callback: this.noticeTimeOut }]}
+                        checkpoints={[{ time: 0, callback: this.handleTimeout }]}
                       >
                         <div className="seconds">
                           남은 시간 <Timer.Seconds />초
