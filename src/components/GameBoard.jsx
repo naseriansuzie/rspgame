@@ -3,7 +3,7 @@ import { observer, inject } from "mobx-react";
 import PropTypes from "prop-types";
 import Timer from "react-compound-timer";
 import "./gameBoard.css";
-import { ROCK, SCISSORS, PAPER, RSP, PLAYER, COMPUTER, DRAW } from "../constant";
+import { ROCK, SCISSORS, PAPER, RSP, PLAYER, COMPUTER, AUTOWIN } from "../constant";
 
 @inject("game", "setup")
 @observer
@@ -39,6 +39,8 @@ class GameBoard extends Component {
         return "가위";
       case PAPER :
         return "보";
+      case AUTOWIN :
+        return "자동 승리";
       default :
         return "";
     }
@@ -51,7 +53,7 @@ class GameBoard extends Component {
         return this.props.setup.playerName;
       case COMPUTER :
         return "컴퓨터";
-      case DRAW :
+      case null :
         return "무승부";
       default :
         return "";

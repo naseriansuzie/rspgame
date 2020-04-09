@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import "antd/dist/antd.css";
 import { Table } from "antd";
 import "./totalScore.css";
-import { PLAYER, COMPUTER, DRAW } from "../constant";
+import { PLAYER, COMPUTER } from "../constant";
 
 @inject("game", "setup")
 @observer
@@ -30,7 +30,7 @@ class TotalScore extends Component {
         return this.props.setup.playerName;
       case COMPUTER :
         return "컴퓨터";
-      case DRAW :
+      case null :
         return "무승부";
       default :
         return "";

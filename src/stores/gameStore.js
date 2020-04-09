@@ -1,5 +1,5 @@
 import { observable, action } from "mobx";
-import { AUTOWIN, COMPUTER, PLAYER, DRAW, RSP, MIDDLE_ROUND, FINAL_ROUND } from "../constant";
+import { AUTOWIN, COMPUTER, PLAYER, RSP, MIDDLE_ROUND, FINAL_ROUND } from "../constant";
 
 export default class GameStore {
   constructor(root) {
@@ -23,35 +23,37 @@ export default class GameStore {
   // 누적된 세트 기록에 따라서 최종 승자 기록
   @action findFinalWinner = () => {
     const winStats = {};
-    this.sets.map(set => set.winner).forEach(player => {
-      if(winStats[player]) {
-        winStats[player]++;
-      } else winStats[player] = 1;
+    this.sets.forEach(set => {
+      if(winStats[set.winner]) {
+        winStats[set.winner]++;
+      } else winStats[set.winner] = 1;
     })
     let players = Object.keys(winStats);
     let winnings = Object.values(winStats);
     let maxWinning = Math.max(...winnings);
     let idx = winnings.indexOf(maxWinning);
     
-    if (!players[idx]) {
-      this.finalWinner = DRAW;
+    const prospectWinner = players[idx];
+    if (prospectWinner === undefined) {
+      this.finalWinner = null;
     } else {
-      if (players[idx] === DRAW) {
-        players = players.filter(player => player !== DRAW);
+      if (prospectWinner === 'null') {
+        players = players.filter(player => player !== prospectWinner);
         winnings = winnings.filter(number => number !== maxWinning);
         maxWinning = Math.max(...winnings);
         idx = winnings.indexOf(maxWinning);
       }
+      
       let count = 0;
-      winnings.forEach((number, idx) => {
-        if (number === maxWinning && players[idx] !== DRAW) {
+      winnings.forEach((number) => {
+        if (number === maxWinning) {
           count++;
         }
       });
       
       if (count >= 2) {
-        this.finalWinner = DRAW;
-      } else this.finalWinner = players[idx];
+        this.finalWinner = null;
+      } else this.finalWinner = players[idx] || null;
     }
   };
 
@@ -106,29 +108,29 @@ export default class GameStore {
 
   findWinnerAtFinalRound() {
     let setWinner = "";
-    let filteredWinners = this.rounds.map(round => round.winner).filter(winner => winner !== DRAW);
+    let filteredWinners = this.rounds.map(round => round.winner).filter(winner => winner);
     if(filteredWinners.length === 0) {
-      setWinner = DRAW;
+      setWinner = null;
     } else if(filteredWinners.length === 1) {
       setWinner = filteredWinners[0];
-    } else if(filteredWinners.length >= 2) {
+    } else if (filteredWinners.length >= 2) {
       let winCount = this.makeWinCount(filteredWinners);
-      if(winCount[COMPUTER] === winCount[PLAYER]) {
-        setWinner = DRAW;
-      } else if(winCount[COMPUTER] > winCount[PLAYER]) {
+      if (winCount[COMPUTER] === winCount[PLAYER]) {
+        setWinner = null;
+      } else if (winCount[COMPUTER] > winCount[PLAYER] || !winCount[PLAYER]) {
         setWinner = COMPUTER;
       } else setWinner = PLAYER;
     }
     this.moveToNextSet(setWinner);
   }
 
-  @action findWinnerAtMiddleRound() {
+  @action findWinnerAtMidRound() {
     let setWinner = this.rounds.reduce((acc, cur) => {
-      if(acc.winner === cur.winner) {
+      if (acc.winner === cur.winner) {
         return acc.winner;
       } else return undefined;
     })
-    if(setWinner && setWinner !== DRAW) {
+    if (setWinner) {
       this.moveToNextSet(setWinner);
     } else this.currentRound++;
   }
@@ -136,7 +138,7 @@ export default class GameStore {
   // 라운드 진척 상황에 따라 승자를 판단
   @action checkRound = () => {
     if(this.rounds.length === MIDDLE_ROUND) {
-      this.findWinnerAtMiddleRound();
+      this.findWinnerAtMidRound();
     } else if(this.rounds.length === FINAL_ROUND) {
       this.findWinnerAtFinalRound();
     } else {
@@ -153,14 +155,12 @@ export default class GameStore {
   // 플레이어 패와 컴퓨터 패를 가지고 게임 진행 & 라운드 결과 기록
   @action runGame = (myHand, computerHand) => {
     const calculation = myHand - computerHand;
-    console.log('myHand', myHand);
-    console.log('computerHand', computerHand);
     let result;
 
     if (calculation === 1 || calculation === -2) {
       result = {winner : COMPUTER, isDraw: false};
     } else if (calculation === 0) {
-      result = {winner : DRAW, isDraw: true};
+      result = {winner : null, isDraw: true};
     } else if (calculation === -1 || calculation === 2) {
       result = {winner : PLAYER, isDraw: false};
     }
