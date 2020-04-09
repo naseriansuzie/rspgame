@@ -40,7 +40,7 @@ export default class SetUpStore {
     this.root.game.isFinished = false;
     this.root.game.finalWinner = null;
     this.root.game.sets = [];
-    this.root.game.rounds = null;
+    this.root.game.rounds = [];
     this.root.game.currentRound = 1;
     this.root.game.computerHand = null;
   };
