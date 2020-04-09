@@ -7,4 +7,7 @@ export const COMPUTER = 'computer';
 export const PLAYER = 'player';
 export const DRAW = 'draw';
 
-export const RSP = {[ROCK] : 0, [SCISSORS] : 1, [PAPER] : -1}
+export const RSP = {[ROCK] : 0, [SCISSORS] : 1, [PAPER] : -1};
+
+export const MIDDLE_ROUND = 2;
+export const FINAL_ROUND = 3;
