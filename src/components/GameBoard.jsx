@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import Timer from "react-compound-timer";
 import "./gameBoard.css";
 import { ROCK, SCISSORS, PAPER, RSP, PLAYER, COMPUTER, AUTOWIN } from "../constant";
+import HandButton from "./HandButton";
 
 @inject("game", "setup")
 @observer
@@ -15,14 +16,7 @@ class GameBoard extends Component {
       alert("게임이 종료되었습니다!");
     } else setup.setTimer();
   }
-
-  handleRSPClick = (hand) => {
-    const {game, setup} = this.props;
-    if(setup.isTimerOn) {
-      game.pickComputerHand(hand);
-    } else alert("게임 시작 버튼을 눌러주세요!");
-  }
-
+  
   noticeTimeOut = () => {
     const { choseHand, autoLose} = this.props.game;
     if(choseHand === false) {
@@ -73,6 +67,7 @@ class GameBoard extends Component {
       currentSet,
       isTimerOn,
     } = this.props.setup;
+    const hands = Object.keys(RSP);
 
     return (
       <>
@@ -96,24 +91,9 @@ class GameBoard extends Component {
                 <div>
                   <p className="description">{playerName}의 선택</p>
                   <div className="rsp-container">
-                    <button className="rsp" onClick={() => this.handleRSPClick(RSP[SCISSORS])}>
-                      <span role="img" aria-label="Victory Hands">
-                        ✌️
-                      </span>{" "}
-                      {this.renderHand(SCISSORS)}
-                    </button>
-                    <button className="rsp" onClick={() => this.handleRSPClick(RSP[ROCK])}>
-                      <span role="img" aria-label="Raised Fist">
-                        ✊
-                      </span>{" "}
-                      {this.renderHand(ROCK)}
-                    </button>
-                    <button className="rsp" onClick={() => this.handleRSPClick(RSP[PAPER])}>
-                      <span role="img" aria-label="Raised Back of Hand">
-                        🤚
-                      </span>{" "}
-                      {this.renderHand(PAPER)}
-                    </button>
+                    {hands.map((hand, idx) => (
+                      <HandButton key={`hand_${idx+1}`} hand={hand} renderHand={this.renderHand}/>
+                    ))}
                   </div>
                   <div className="timer-container">
                     {isTimerOn ? (
