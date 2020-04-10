@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import { Intro, Game } from "./pages";
 import "./App.css";
 
-const App = function () {
+const App = () => {
   return (
     <>
       <div className="title">

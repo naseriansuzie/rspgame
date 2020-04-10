@@ -2,36 +2,37 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { observer, inject } from "mobx-react";
+import { MIN_GAME_SET } from "../constant";
 import "./introduction.css";
 
 @inject("setup")
 @observer
-class Introduction extends Component { 
-
+class Introduction extends Component {
   handleChange = (e) => {
     const { setup } = this.props;
-    setup.fillPlayerName(e);
-  }
+    const { value } = e.target;
+    setup.fillPlayerName(value);
+  };
 
   handlePlusClick = () => {
     this.props.setup.increaseSet();
-  }
+  };
 
   handleMinusClick = () => {
     const { setup } = this.props;
-    if(setup.gameSet - 2 < 0) {
+    if (setup.gameSet === MIN_GAME_SET) {
       alert("1세트 이상으로 설정해주세요.");
     } else setup.decreaseSet();
-  }
+  };
 
   handleStartClick = () => {
     const { setup } = this.props;
     setup.moveToGame();
-  }
-  
+  };
+
   handleAlert = () => {
     alert("플레이어 이름을 넣어주세요!");
-  }
+  };
 
   render() {
     const { playerName, gameSet } = this.props.setup;
@@ -86,10 +87,7 @@ class Introduction extends Component {
               <button className="move-btn">시작하기</button>
             </Link>
           ) : (
-            <button
-              className="move-btn"
-              onClick={this.handleAlert}
-            >
+            <button className="move-btn" onClick={this.handleAlert}>
               시작하기
             </button>
           )}
@@ -100,7 +98,7 @@ class Introduction extends Component {
 }
 
 Introduction.wrappedComponent.propTypes = {
-  setup : PropTypes.object.isRequired
-}
+  setup: PropTypes.object.isRequired,
+};
 
 export default Introduction;

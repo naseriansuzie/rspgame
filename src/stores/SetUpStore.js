@@ -17,24 +17,24 @@ export default class SetUpStore {
 
   @observable isTimerOn = false;
 
-  @action fillPlayerName (e) {
-    this.playerName = e.target.value;
-  };
+  @action fillPlayerName(value) {
+    this.playerName = value;
+  }
 
-  @action increaseSet () {
+  @action increaseSet() {
     this.gameSet++;
-  };
+  }
 
-  @action decreaseSet () {
+  @action decreaseSet() {
     this.gameSet--;
-  };
+  }
 
-  @action moveToGame () {
+  @action moveToGame() {
     this.quit = false;
     this.restart = false;
-  };
+  }
 
-  @action resetGame () {
+  @action resetGame() {
     this.currentSet = 1;
     this.isTimerOn = false;
     this.root.game.isFinished = false;
@@ -43,26 +43,25 @@ export default class SetUpStore {
     this.root.game.rounds = [];
     this.root.game.currentRound = 1;
     this.root.game.computerHand = null;
-  };
+  }
 
-  @action makeRestart () {
+  @action makeRestart() {
     this.restart = true;
     this.resetGame();
-  };
+  }
 
-
-  @action makeQuit () {
+  @action makeQuit() {
     this.playerName = "";
     this.quit = true;
     this.gameSet = 1;
     this.resetGame();
-  };
+  }
 
-  @action setTimer () {
+  @action setTimer() {
     this.isTimerOn = true;
-  };
+  }
 
-  @action resetTimer () {
+  @action resetTimer() {
     this.isTimerOn = false;
-  };
+  }
 }

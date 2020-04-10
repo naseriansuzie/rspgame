@@ -3,71 +3,67 @@ import { observer, inject } from "mobx-react";
 import PropTypes from "prop-types";
 import Timer from "react-compound-timer";
 import "./gameBoard.css";
-import { ROCK, SCISSORS, PAPER, RSP, PLAYER, COMPUTER, AUTOWIN } from "../constant";
+import {
+  ROCK,
+  SCISSORS,
+  PAPER,
+  RSP,
+  PLAYER,
+  COMPUTER,
+  AUTOWIN,
+} from "../constant";
 import HandButton from "./HandButton";
 
 @inject("game", "setup")
 @observer
 class GameBoard extends Component {
-  
   handleGameStartClick = () => {
-    const {game, setup} = this.props;
+    const { game, setup } = this.props;
     if (game.isFinished) {
       alert("게임이 종료되었습니다!");
     } else setup.setTimer();
-  }
-  
-  
+  };
+
   handleTimeout = () => {
     const { game } = this.props;
-    if(game.choseHand === false) {
+    if (game.choseHand === false) {
       alert("5초가 지났습니다 ㅠㅠ");
       game.autoLose();
     }
-  }
+  };
 
   renderHand = (type) => {
     switch (type) {
-      case ROCK :
+      case ROCK:
         return "바위";
-      case SCISSORS :
+      case SCISSORS:
         return "가위";
-      case PAPER :
+      case PAPER:
         return "보";
-      case AUTOWIN :
+      case AUTOWIN:
         return "자동 승리";
-      default :
+      default:
         return "";
     }
-  }
+  };
 
   renderRoundWinner = (rounds) => {
     let latestWinner = rounds[rounds.length - 1].winner;
     switch (latestWinner) {
-      case PLAYER :
+      case PLAYER:
         return this.props.setup.playerName;
-      case COMPUTER :
+      case COMPUTER:
         return "컴퓨터";
-      case null :
+      case null:
         return "무승부";
-      default :
+      default:
         return "";
     }
   };
 
   render() {
-    const {
-      computerHand,
-      rounds,
-      currentRound,
-      isFinished,
-    } = this.props.game;
-    const {
-      playerName,
-      gameSet,
-      currentSet,
-      isTimerOn,
-    } = this.props.setup;
+    const { computerHand, rounds, currentRound, isFinished } = this.props.game;
+    const { playerName, gameSet, currentSet, isTimerOn } = this.props.setup;
     const hands = Object.keys(RSP);
 
     return (
@@ -85,15 +81,22 @@ class GameBoard extends Component {
           <div className="two-hands">
             <div className="hands-box">
               {isTimerOn === false ? (
-                <button className="start-btn" onClick={this.handleGameStartClick}>
+                <button
+                  className="start-btn"
+                  onClick={this.handleGameStartClick}
+                >
                   게임 시작
                 </button>
               ) : (
                 <div>
                   <p className="description">{playerName}의 선택</p>
                   <div className="rsp-container">
-                    {hands.map((hand, idx) => (
-                      <HandButton key={`hand_${idx+1}`} hand={hand} renderHand={this.renderHand}/>
+                    {hands.map((hand) => (
+                      <HandButton
+                        key={hand}
+                        hand={hand}
+                        renderHand={this.renderHand}
+                      />
                     ))}
                   </div>
                   <div className="timer-container">
@@ -101,7 +104,9 @@ class GameBoard extends Component {
                       <Timer
                         initialTime={5500}
                         direction="backward"
-                        checkpoints={[{ time: 0, callback: this.handleTimeout }]}
+                        checkpoints={[
+                          { time: 0, callback: this.handleTimeout },
+                        ]}
                       >
                         <div className="seconds">
                           남은 시간 <Timer.Seconds />초
@@ -135,8 +140,8 @@ class GameBoard extends Component {
 }
 
 GameBoard.wrappedComponent.propTypes = {
-  game : PropTypes.object.isRequired, 
-  setup : PropTypes.object.isRequired
-}
+  game: PropTypes.object.isRequired,
+  setup: PropTypes.object.isRequired,
+};
 
 export default GameBoard;
