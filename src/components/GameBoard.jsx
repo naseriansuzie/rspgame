@@ -3,15 +3,8 @@ import { observer, inject } from "mobx-react";
 import PropTypes from "prop-types";
 import Timer from "react-compound-timer";
 import "./gameBoard.css";
-import {
-  ROCK,
-  SCISSORS,
-  PAPER,
-  RSP,
-  PLAYER,
-  COMPUTER,
-  AUTOWIN,
-} from "../constant";
+import { RSP } from "../constant";
+import * as utils from "../util";
 import HandButton from "./HandButton";
 
 @inject("game", "setup")
@@ -32,33 +25,10 @@ class GameBoard extends Component {
     }
   };
 
-  renderHand = (type) => {
-    switch (type) {
-      case ROCK:
-        return "바위";
-      case SCISSORS:
-        return "가위";
-      case PAPER:
-        return "보";
-      case AUTOWIN:
-        return "자동 승리";
-      default:
-        return "";
-    }
-  };
-
-  renderRoundWinner = (rounds) => {
+  displayRoundWinner = (rounds) => {
     let latestWinner = rounds[rounds.length - 1].winner;
-    switch (latestWinner) {
-      case PLAYER:
-        return this.props.setup.playerName;
-      case COMPUTER:
-        return "컴퓨터";
-      case null:
-        return "무승부";
-      default:
-        return "";
-    }
+    const { setup } = this.props;
+    return utils.getWinnerValue(latestWinner, setup.playerName);
   };
 
   render() {
@@ -92,11 +62,7 @@ class GameBoard extends Component {
                   <p className="description">{playerName}의 선택</p>
                   <div className="rsp-container">
                     {hands.map((hand) => (
-                      <HandButton
-                        key={hand}
-                        hand={hand}
-                        renderHand={this.renderHand}
-                      />
+                      <HandButton key={hand} hand={hand} />
                     ))}
                   </div>
                   <div className="timer-container">
@@ -121,13 +87,13 @@ class GameBoard extends Component {
             </div>
             <div className="hands-box">
               <p className="description">컴퓨터의 선택</p>
-              <p className="description">{this.renderHand(computerHand)}</p>
+              <p className="description">{utils.getHandValue(computerHand)}</p>
             </div>
           </div>
           <div>
             {rounds.length > 0 && !isFinished ? (
               <div className="score-result">
-                <div>이번 판 승자 "{this.renderRoundWinner(rounds)}"</div>
+                <div>이번 판 승자 "{this.displayRoundWinner(rounds)}"</div>
               </div>
             ) : (
               <div />

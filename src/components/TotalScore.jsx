@@ -1,15 +1,14 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 import PropTypes from "prop-types";
+import * as utils from "../util";
 import "antd/dist/antd.css";
 import { Table } from "antd";
 import "./totalScore.css";
-import { PLAYER, COMPUTER } from "../constant";
 
 @inject("game", "setup")
 @observer
 class TotalScore extends Component {
-
   columns = [
     {
       title: "Set",
@@ -20,25 +19,14 @@ class TotalScore extends Component {
       title: "Winner",
       dataIndex: "winner",
       key: "winner",
-      render : winner => this.renderWinner(winner)
-    }
+      render: (winner) =>
+        utils.getWinnerValue(winner, this.props.setup.playerName),
+    },
   ];
-
-  renderWinner = (winner) => {
-    switch(winner) {
-      case PLAYER :
-        return this.props.setup.playerName;
-      case COMPUTER :
-        return "컴퓨터";
-      case null :
-        return "무승부";
-      default :
-        return "";
-    }
-  }
 
   render() {
     const { sets, isFinished, finalWinner } = this.props.game;
+    const { playerName } = this.props.setup;
     return (
       <div className="total-score-container">
         <h2 className="h2">
@@ -56,9 +44,7 @@ class TotalScore extends Component {
           )}
         </ul>
         {isFinished ? (
-          <h1>
-            최종 승리자 : {this.renderWinner(finalWinner)}
-          </h1>
+          <h1>최종 승리자 : {utils.getWinnerValue(finalWinner, playerName)}</h1>
         ) : (
           <p />
         )}
@@ -68,8 +54,8 @@ class TotalScore extends Component {
 }
 
 TotalScore.wrappedComponent.propTypes = {
-  game : PropTypes.object.isRequired, 
-  setup : PropTypes.object.isRequired
-}
+  game: PropTypes.object.isRequired,
+  setup: PropTypes.object.isRequired,
+};
 
 export default TotalScore;
