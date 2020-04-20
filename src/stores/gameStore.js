@@ -1,162 +1,184 @@
 import { observable, action } from "mobx";
+import { AUTOWIN, COMPUTER, PLAYER, RSP, MIDDLE_ROUND, FINAL_ROUND } from "../constant";
 
 export default class GameStore {
   constructor(root) {
     this.root = root;
   }
 
-  @observable round = 1;
-
   @observable choseHand = false;
-
+  
   @observable computerHand = null;
+  
+  @observable currentRound = 1;
 
-  @observable win = 0;
-  @observable lose = 0;
-  @observable draw = 0;
+  @observable rounds = [];
 
-  @observable result = null;
-
-  @observable roundResults = [];
-  // [{win : 0 , lose : 3, draw: 0}, ...]
-
-  @observable winningStatus = { player: 0, computer: 0, draw: 0 };
+  @observable sets = [];
 
   @observable isFinished = false;
 
   @observable finalWinner = null;
 
-  @action findFinalWinner = () => {
-    let players = Object.keys(this.winningStatus);
-    let winnings = Object.values(this.winningStatus);
+  // 누적된 세트 기록에 따라서 최종 승자 기록
+  @action findFinalWinner () {
+    const winStats = {};
+    this.sets.forEach(set => {
+      if(winStats[set.winner]) {
+        winStats[set.winner]++;
+      } else winStats[set.winner] = 1;
+    })
+    let players = Object.keys(winStats);
+    let winnings = Object.values(winStats);
     let maxWinning = Math.max(...winnings);
     let idx = winnings.indexOf(maxWinning);
-
-    if (players[idx] === "draw") {
-      players = players.filter(player => player !== "draw");
-      winnings = winnings.filter(number => number !== maxWinning);
-      maxWinning = Math.max(...winnings);
-      idx = winnings.indexOf(maxWinning);
-    }
-    let count = 0;
-    winnings.forEach(number => {
-      if (number === maxWinning) {
-        count++;
+    
+    const prospectWinner = players[idx];
+    if (prospectWinner === undefined) {
+      this.finalWinner = null;
+    } else {
+      if (prospectWinner === 'null') {
+        players = players.filter(player => player !== prospectWinner);
+        winnings = winnings.filter(number => number !== maxWinning);
+        maxWinning = Math.max(...winnings);
+        idx = winnings.indexOf(maxWinning);
       }
-    });
-
-    if (count > 2) {
-      this.finalWinner = "draw";
-    } else this.finalWinner = players[idx];
+      
+      let count = 0;
+      winnings.forEach((number) => {
+        if (number === maxWinning) {
+          count++;
+        }
+      });
+      
+      if (count >= 2) {
+        this.finalWinner = null;
+      } else this.finalWinner = players[idx] || null;
+    }
   };
 
-  @action noticeFinal = () => {
+  // 세트 종료
+  @action noticeFinal () {
     this.isFinished = true;
     this.findFinalWinner();
   };
 
-  @action prepareNextRound = () => {
+  // 세트 진행 상황에 따라 진행 여부 판단
+  @action prepareNextRound () {
     if (this.root.setup.currentSet < this.root.setup.gameSet) {
       this.root.setup.currentSet++;
-      this.round = 1;
-    } else {
-      this.noticeFinal();
-    }
+      this.currentRound = 1;
+      this.rounds = [];
+    } else this.noticeFinal();
   };
 
-  @action resetRSPPair = () => {
-    this.win = 0;
-    this.lose = 0;
-    this.draw = 0;
-  };
-
-  @action recordWinner = winner => {
-    this.winningStatus[winner]++;
-  };
-
-  @action recordRoundResults = winner => {
-    this.roundResults = [
-      ...this.roundResults,
+  // 세트 기록
+  @action recordSets (winner) {
+    this.sets = [
+      ...this.sets,
       {
         key: this.root.setup.currentSet,
         set: this.root.setup.currentSet,
         winner: winner,
-        win: this.win,
-        lose: this.lose,
-        draw: this.draw,
       },
     ];
   };
 
-  @action moveToNextSet = winner => {
-    this.recordRoundResults(winner);
-    this.recordWinner(winner);
-    this.resetRSPPair();
+  // 기존 세트의 승자를 기록하고, 다음 세트를 위해 rounds와 currentRound 리셋
+  moveToNextSet (winner) {
+    this.recordSets(winner);
     this.prepareNextRound();
   };
 
-  @action resetHandChoice = () => {
+  @action resetHandChoice () {
     this.choseHand = false;
   };
 
-  @action checkRound = () => {
-    if (this.round < 3) {
-      if (this.win >= 2) {
-        this.moveToNextSet("player");
-      } else if (this.lose >= 2) {
-        this.moveToNextSet("computer");
-      } else {
-        this.round++;
-      }
-    } else if (this.round === 3) {
-      if (this.win >= 2 || (this.win >= 1 && this.draw === 2)) {
-        this.moveToNextSet("player");
-      } else if (this.lose >= 2 || (this.lose >= 1 && this.win === 0)) {
-        this.moveToNextSet("computer");
-      } else {
-        this.moveToNextSet("draw");
-      }
+  makeWinCount (filteredWinners) {
+    let winCount = {};
+    filteredWinners.forEach(winner => {
+      if(winCount[winner]) {
+        winCount[winner]++;
+      } else winCount[winner] = 1;
+    });
+    return winCount;
+  }
+
+  findWinnerAtFinalRound () {
+    let setWinner = "";
+    let filteredWinners = this.rounds.map(round => round.winner).filter(winner => winner);
+    if(filteredWinners.length === 0) {
+      setWinner = null;
+    } else if(filteredWinners.length === 1) {
+      setWinner = filteredWinners[0];
+    } else if (filteredWinners.length >= 2) {
+      let winCount = this.makeWinCount(filteredWinners);
+      if (winCount[COMPUTER] === winCount[PLAYER]) {
+        setWinner = null;
+      } else if (winCount[COMPUTER] > winCount[PLAYER] || !winCount[PLAYER]) {
+        setWinner = COMPUTER;
+      } else setWinner = PLAYER;
+    }
+    this.moveToNextSet(setWinner);
+  }
+
+  @action findWinnerAtMidRound () {
+    let setWinner = this.rounds.reduce((acc, cur) => {
+      if (acc.winner === cur.winner) {
+        return acc.winner;
+      } else return undefined;
+    })
+    if (setWinner) {
+      this.moveToNextSet(setWinner);
+    } else this.currentRound++;
+  }
+
+  // 라운드 진척 상황에 따라 승자를 판단
+  @action checkRound () {
+    if(this.rounds.length === MIDDLE_ROUND) {
+      this.findWinnerAtMidRound();
+    } else if(this.rounds.length === FINAL_ROUND) {
+      this.findWinnerAtFinalRound();
+    } else {
+      this.currentRound++;
     }
     this.resetHandChoice();
     this.root.setup.resetTimer();
   };
 
-  @action makeHandChoice = () => {
+  @action makeHandChoice () {
     this.choseHand = true;
   };
 
-  @action runGame = (myHand, computerHand) => {
-    if (myHand - computerHand === 0) {
-      this.result = "무";
-      this.draw++;
-    } else if (myHand - computerHand === -1 || myHand - computerHand === 2) {
-      this.result = "승";
-      this.win++;
-    } else if (myHand - computerHand === 1 || myHand - computerHand === -2) {
-      this.result = "패";
-      this.lose++;
+  // 플레이어 패와 컴퓨터 패를 가지고 게임 진행 & 라운드 결과 기록
+  @action runGame (myHand, computerHand) {
+    const calculation = myHand - computerHand;
+    let result;
+    
+    if (calculation === 1 || calculation === -2) {
+      result = {winner : COMPUTER, isDraw: false};
+    } else if (calculation === 0) {
+      result = {winner : null, isDraw: true};
+    } else if (calculation === -1 || calculation === 2) {
+      result = {winner : PLAYER, isDraw: false};
     }
+
+    this.rounds = [...this.rounds, result];
     this.makeHandChoice();
     this.checkRound();
   };
 
-  @action setComputerHand = myHand => {
-    if (this.root.setup.isTimerOn) {
-      const rsp = { 가위: 1, 바위: 0, 보: -1 };
-      const hands = ["가위", "바위", "보"];
-      const idx = Math.floor(Math.random() * 3);
-      this.computerHand = hands[idx];
-      this.runGame(myHand, rsp[this.computerHand]);
-    } else alert("게임 시작 버튼을 눌러주세요!");
+  // 컴퓨터가 패를 고름
+  @action pickComputerHand (myHand) {
+    const hands = Object.keys(RSP);
+    const idx = Math.floor(Math.random() * 3);
+    this.computerHand = hands[idx];
+    this.runGame(myHand, RSP[this.computerHand]);
   };
 
-  @action autoLose = () => {
-    if (this.choseHand === false) {
-      alert("5초가 지났습니다 ㅠㅠ");
-      this.result = "패";
-      this.computerHand = "자동 승리";
-      this.lose++;
-      this.checkRound();
-    }
+  @action autoLose () {
+    this.rounds = [...this.rounds, {winner : COMPUTER, isDraw: false}];
+    this.computerHand = AUTOWIN;
+    this.checkRound();
   };
 }
