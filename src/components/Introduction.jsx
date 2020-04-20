@@ -1,20 +1,41 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 import { observer, inject } from "mobx-react";
+import { MIN_GAME_SET } from "../constant";
 import "./introduction.css";
 
 @inject("setup")
 @observer
 class Introduction extends Component {
+  handleChange = (e) => {
+    const { setup } = this.props;
+    const { value } = e.target;
+    setup.fillPlayerName(value);
+  };
+
+  handlePlusClick = () => {
+    this.props.setup.increaseSet();
+  };
+
+  handleMinusClick = () => {
+    const { setup } = this.props;
+    if (setup.gameSet === MIN_GAME_SET) {
+      alert("1세트 이상으로 설정해주세요.");
+    } else setup.decreaseSet();
+  };
+
+  handleStartClick = () => {
+    const { setup } = this.props;
+    setup.moveToGame();
+  };
+
+  handleAlert = () => {
+    alert("플레이어 이름을 넣어주세요!");
+  };
+
   render() {
-    const {
-      playerName,
-      gameSet,
-      setPlayerName,
-      increaseSet,
-      decreaseSet,
-      moveToGame,
-    } = this.props.setup;
+    const { playerName, gameSet } = this.props.setup;
     return (
       <div className="intro-container">
         <div className="intro-box">
@@ -29,7 +50,7 @@ class Introduction extends Component {
             type="text"
             placeholder="플레이어 이름은?"
             value={playerName}
-            onChange={setPlayerName}
+            onChange={this.handleChange}
           ></input>
         </div>
         <div className="intro-box">
@@ -41,10 +62,10 @@ class Introduction extends Component {
           </h2>
           <div className="game-set">
             <span className="num-of-set">{gameSet} set</span>
-            <button className="plusMinus-btn" onClick={increaseSet}>
+            <button className="plusMinus-btn" onClick={this.handlePlusClick}>
               +
             </button>
-            <button className="plusMinus-btn" onClick={decreaseSet}>
+            <button className="plusMinus-btn" onClick={this.handleMinusClick}>
               -
             </button>
           </div>
@@ -62,15 +83,12 @@ class Introduction extends Component {
             <li>절반 이상의 세트를 이긴 플레이어가 최종 승리합니다.</li>
           </ul>
           {playerName !== "" ? (
-            <Link to="/rsp" onClick={moveToGame}>
-              <button className="move-btn">게임 시작하기</button>
+            <Link to="/rsp" onClick={this.handleStartClick}>
+              <button className="move-btn">시작하기</button>
             </Link>
           ) : (
-            <button
-              className="move-btn"
-              onClick={() => alert("player의 이름을 넣어주세요!")}
-            >
-              게임시작하기
+            <button className="move-btn" onClick={this.handleAlert}>
+              시작하기
             </button>
           )}
         </div>
@@ -78,4 +96,9 @@ class Introduction extends Component {
     );
   }
 }
+
+Introduction.wrappedComponent.propTypes = {
+  setup: PropTypes.object.isRequired,
+};
+
 export default Introduction;
